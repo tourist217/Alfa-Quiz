@@ -100,8 +100,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   display:inline-block;width:13px;height:12px;
   background:var(--red);transform:skewX(-22deg);border-radius:1px;flex:none;
 }
-.screen{flex:1;display:flex;flex-direction:column;animation:enter .24s ease-out}
-@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.screen{flex:1;display:flex;flex-direction:column;animation:enter .18s cubic-bezier(0.16, 1, 0.3, 1)}
+@keyframes enter{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){.screen{animation:none}}
 .sr-heading:focus{outline:none}
 
@@ -955,7 +955,12 @@ function renderQuestion(){
       var v = b.getAttribute("data-v");
       if(q.type === "single"){
         state.answers[q.id] = v;
-        render();
+        app.querySelectorAll(".opt").forEach(function(optBtn){
+          var isCur = optBtn.getAttribute("data-v") === v;
+          optBtn.setAttribute("aria-pressed", isCur ? "true" : "false");
+        });
+        var nextBtn = document.getElementById("nextBtn");
+        if(nextBtn) nextBtn.disabled = false;
         return;
       }
       var cur = (state.answers[q.id] || []).slice();
@@ -974,7 +979,16 @@ function renderQuestion(){
         if(!has(cur, "site")) delete state.answers.site;
         if(onlyNone(state.answers)) delete state.answers.turnover;
       }
-      render();
+      app.querySelectorAll(".opt").forEach(function(optBtn){
+        var val = optBtn.getAttribute("data-v");
+        var on = cur.indexOf(val) !== -1;
+        var dis = !on && q.max && cur.length >= q.max;
+        optBtn.setAttribute("aria-pressed", on ? "true" : "false");
+        if(dis) optBtn.setAttribute("disabled", "");
+        else optBtn.removeAttribute("disabled");
+      });
+      var nextBtn = document.getElementById("nextBtn");
+      if(nextBtn) nextBtn.disabled = !isAnswered(q);
     };
   });
 
