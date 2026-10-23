@@ -14,21 +14,21 @@
 <style>
 :root{
   color-scheme: light;
-  --bg:#F5F6F8;
+  --bg:#F7F8FA;
   --paper:#FFFFFF;
   --panel:#F0F1F4;
   --panel-hover:#E6E8ED;
-  --text:#1B1B21;
-  --muted:#666672;
-  --bar:#1B1B21;
+  --text:#0F1014;
+  --muted:#5D5F6B;
+  --bar:#111114;
   --on-bar:#FFFFFF;
-  --lime:#A8EB00;
-  --lime-hover:#99D800;
-  --on-lime:#1B1B21;
+  --lime:#B6F800;
+  --lime-hover:#A2DF00;
+  --on-lime:#000000;
   --red:#EF3124;
-  --field:#F7F8FA;
+  --field:#F4F5F8;
   --border:#D8D9E0;
-  --focus:#1B1B21;
+  --focus:#111114;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -36,17 +36,17 @@
 @media (prefers-color-scheme: dark){
   :root{
     color-scheme: dark;
-    --bg:#111114;
-    --paper:#18181D;
-    --panel:#25252C;
-    --panel-hover:#2E2E36;
-    --text:#F1F1F3;
-    --muted:#A4A4AE;
+    --bg:#0A0B0E;
+    --paper:#121318;
+    --panel:#1C1D24;
+    --panel-hover:#252730;
+    --text:#F3F4F6;
+    --muted:#9A9BA6;
     --bar:#000000;
     --on-bar:#FFFFFF;
-    --field:#202027;
-    --border:#36363F;
-    --focus:#A8EB00;
+    --field:#181920;
+    --border:#2D2F3A;
+    --focus:#B6F800;
   }
 }
 *,*::before,*::after{box-sizing:inherit}
@@ -54,7 +54,7 @@ html{height:100%;-webkit-text-size-adjust:100%}
 body{
   margin:0;min-height:100%;
   background:var(--bg);color:var(--text);
-  font-family:"Onest",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-family:"Onest","Verdana","Arial",-apple-system,BlinkMacSystemFont,sans-serif;
   font-size:18px;line-height:1.45;
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color:transparent;
@@ -87,9 +87,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .brand svg{width:26px;height:26px;flex:none;color:var(--text)}
 .top-actions{display:flex;align-items:center;gap:10px}
 .pill{
-  background:var(--lime);color:var(--on-lime);
-  font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;
+  background:var(--panel);color:var(--text);border:1.5px solid var(--border);
+  font-weight:700;font-size:14px;padding:6px 14px 6px 8px;border-radius:999px;
+  display:inline-flex;align-items:center;gap:8px;
   white-space:nowrap;user-select:none;
+}
+.badge-ekom{
+  background:var(--lime);color:var(--on-lime);font-weight:800;font-size:12.5px;
+  padding:3px 10px;border-radius:999px;letter-spacing:0.04em;
 }
 .icon-btn{
   background:none;border:0;padding:8px;border-radius:12px;
@@ -98,7 +103,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .icon-btn:hover{color:var(--text);background:var(--panel)}
 .tick{
   display:inline-block;width:13px;height:12px;
-  background:var(--red);transform:skewX(-22deg);border-radius:1px;flex:none;
+  background:var(--red);transform:skewX(-20deg);border-radius:1px;flex:none;
 }
 .screen{flex:1;display:flex;flex-direction:column;animation:enter .18s cubic-bezier(0.16, 1, 0.3, 1)}
 @keyframes enter{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -147,9 +152,15 @@ button,input,select,textarea{font:inherit;color:inherit}
   gap:12px 28px;font-size: clamp(17px,2vw,20px);font-weight:700;
 }
 .hero-facts li{display:flex;align-items:center;gap:10px}
+.hero-tag{
+  display:inline-flex;align-items:center;background:var(--bar);color:var(--on-bar);
+  font-weight:800;font-size:13px;padding:6px 16px;border-radius:999px;
+  letter-spacing:0.04em;align-self:flex-start;margin-bottom:-10px;
+}
 .hero-shape{
-  position:absolute;right:-4%;top:-16%;width:min(54%,500px);
-  aspect-ratio:1;z-index:0;pointer-events:none;
+  position:absolute;right:-4%;top:-10%;width:min(55%,500px);
+  aspect-ratio:1;z-index:0;pointer-events:none;object-fit:cover;
+  border-radius:28px;mix-blend-mode:multiply;opacity:0.92;
 }
 .hero-bar{
   position:relative;z-index:1;
@@ -350,11 +361,13 @@ td .small{color:var(--muted);font-size:13.5px;margin-top:2px}
   <div class="frame">
     <header class="top">
       <div class="brand" id="brandLogo" title="Нажмите 5 раз для панели лидов">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h5v7.2L16.6 3H23l-9.2 8.6L23 21h-6.6l-7.4-7.6V21H4z" fill="currentColor"/></svg>
-        Альфа Селлер
+        <svg viewBox="0 0 268 28" aria-label="Альфа Селлер" role="img" style="height:32px;width:auto;fill:currentColor;display:block">
+          <path d="M 7.11 5.61 C 7.76 4.04 9.30 3.01 11.01 3.01 L 27.62 3.02 L 25.12 9.05 L 15.95 9.05 L 21.67 17.43 L 21.68 17.43 L 20.27 20.85 L 16.75 20.85 L 10.87 12.24 L 7.29 20.85 L 0.85 20.84 L 7.11 5.61 Z" />
+          <path d="M 248.76 6.88 L 253.17 6.88 L 253.17 9.99 C 253.80 7.62 255.46 6.63 258.54 6.63 L 258.57 6.63 C 263.16 6.63 265.45 8.82 265.45 13.26 C 265.45 17.72 263.16 19.91 258.57 19.91 L 258.54 19.91 C 255.46 19.91 253.80 18.92 253.17 16.55 L 253.17 24.75 L 248.76 24.75 L 248.76 6.88 Z M 253.17 13.26 C 253.17 15.27 254.39 16.14 257.19 16.14 C 259.92 16.14 261.04 15.32 261.04 13.26 C 261.04 11.22 259.92 10.40 257.19 10.40 C 254.39 10.40 253.17 11.27 253.17 13.26 Z M 237.55 6.65 L 237.60 6.65 C 243.39 6.65 245.94 8.69 245.94 13.23 L 245.94 13.31 C 245.94 13.92 245.91 14.35 245.84 14.76 L 233.78 14.76 C 234.09 16.21 235.05 16.62 237.55 16.62 L 237.60 16.62 C 240.41 16.62 241.20 16.32 241.40 15.70 L 245.68 15.78 C 245.28 18.69 242.88 19.91 237.60 19.91 L 237.55 19.91 C 231.82 19.91 229.24 17.87 229.24 13.31 L 229.24 13.23 C 229.24 8.69 231.82 6.65 237.55 6.65 Z M 237.55 9.94 C 235.03 9.94 234.06 10.33 233.75 11.78 L 241.43 11.78 C 241.12 10.33 240.15 9.94 237.60 9.94 L 237.55 9.94 Z M 212.59 6.88 L 226.44 6.88 L 226.44 19.66 L 222.03 19.66 L 222.03 10.66 L 216.57 10.66 L 216.47 12.75 C 216.14 18.51 215.17 19.78 210.50 19.78 L 209.99 19.78 L 209.99 15.86 L 210.17 15.86 C 211.86 15.86 212.14 15.25 212.31 12.03 L 212.59 6.88 Z M 193.76 6.88 L 207.60 6.88 L 207.60 19.66 L 203.19 19.66 L 203.19 10.66 L 197.74 10.66 L 197.64 12.75 C 197.31 18.51 196.34 19.78 191.67 19.78 L 191.16 19.78 L 191.16 15.86 L 191.34 15.86 C 193.02 15.86 193.30 15.25 193.48 12.03 L 193.76 6.88 Z M 181.03 6.65 L 181.08 6.65 C 186.87 6.65 189.42 8.69 189.42 13.23 L 189.42 13.31 C 189.42 13.92 189.39 14.35 189.31 14.76 L 177.25 14.76 C 177.56 16.21 178.53 16.62 181.03 16.62 L 181.08 16.62 C 183.88 16.62 184.67 16.32 184.88 15.70 L 189.16 15.78 C 188.75 18.69 186.36 19.91 181.08 19.91 L 181.03 19.91 C 175.29 19.91 172.72 17.87 172.72 13.31 L 172.72 13.23 C 172.72 8.69 175.29 6.65 181.03 6.65 Z M 181.03 9.94 C 178.50 9.94 177.54 10.33 177.23 11.78 L 184.90 11.78 C 184.60 10.33 183.63 9.94 181.08 9.94 L 181.03 9.94 Z M 159.88 1.55 L 159.93 1.55 C 166.16 1.55 169.55 3.62 170.16 8.74 L 165.26 8.82 C 164.91 6.88 163.48 6.14 159.93 6.14 L 159.88 6.14 C 155.86 6.14 154.43 7.32 154.43 10.71 L 154.43 10.76 C 154.43 14.12 155.88 15.32 159.88 15.32 L 159.93 15.32 C 163.61 15.32 164.98 14.61 165.39 12.39 L 170.44 12.47 C 169.83 17.79 166.64 19.91 159.93 19.91 L 159.88 19.91 C 152.85 19.91 149.41 16.90 149.41 10.76 L 149.41 10.71 C 149.41 4.56 152.85 1.55 159.88 1.55 Z M 132.93 19.66 L 132.62 16.42 C 131.83 18.92 129.95 19.91 126.20 19.91 C 122.07 19.91 120.18 18.69 120.18 15.93 C 120.18 13.21 122.04 12.01 126.35 11.93 L 132.42 11.83 C 132.27 10.27 131.50 10.02 128.65 10.02 C 126.07 10.02 125.61 10.22 125.36 11.17 L 120.95 11.09 C 121.46 7.72 123.40 6.63 128.70 6.63 C 134.84 6.63 136.88 8.11 136.88 12.44 L 136.88 19.66 L 132.93 19.66 Z M 127.37 16.52 C 130.48 16.52 131.94 16.01 132.34 14.58 L 126.76 14.68 C 125.20 14.71 124.59 14.96 124.59 15.60 C 124.59 16.29 125.31 16.52 127.37 16.52 Z M 104.16 24.75 L 104.16 19.91 L 103.21 19.91 C 97.63 19.91 95.08 17.82 95.08 13.28 L 95.08 13.23 C 95.08 8.72 97.63 6.63 103.21 6.63 L 104.16 6.63 L 104.16 1.79 L 108.56 1.79 L 108.56 6.63 L 109.51 6.63 C 115.09 6.63 117.64 8.72 117.64 13.23 L 117.64 13.28 C 117.64 17.82 115.09 19.91 109.51 19.91 L 108.56 19.91 L 108.56 24.75 L 104.16 24.75 Z M 99.29 13.28 C 99.29 15.40 100.31 16.14 103.21 16.14 L 104.16 16.14 L 104.16 10.40 L 103.21 10.40 C 100.28 10.40 99.29 11.12 99.29 13.23 L 99.29 13.28 Z M 108.56 10.40 L 108.56 16.14 L 109.51 16.14 C 112.42 16.14 113.43 15.40 113.43 13.28 L 113.43 13.23 C 113.43 11.12 112.44 10.40 109.51 10.40 L 108.56 10.40 Z M 77.35 6.91 L 81.76 6.91 L 81.76 11.12 L 87.47 11.12 C 91.60 11.12 93.03 12.29 93.03 15.35 L 93.03 15.40 C 93.03 18.48 91.60 19.66 87.47 19.66 L 77.35 19.66 L 77.35 6.91 Z M 81.76 14.30 L 81.76 16.47 L 87.22 16.47 C 88.29 16.47 88.62 16.24 88.62 15.40 L 88.62 15.35 C 88.62 14.53 88.29 14.30 87.22 14.30 L 81.76 14.30 Z M 60.07 6.88 L 73.91 6.88 L 73.91 19.66 L 69.50 19.66 L 69.50 10.66 L 64.05 10.66 L 64.95 12.75 C 63.62 18.51 62.65 19.78 57.98 19.78 L 57.47 19.78 L 57.47 15.86 L 57.65 15.86 C 59.33 15.86 59.61 15.25 59.79 12.03 L 60.07 6.88 Z M 42.19 1.81 L 48.92 1.81 L 56.27 19.66 L 51.06 19.66 L 49.66 16.06 L 41.45 16.06 L 40.05 19.66 L 34.85 19.66 L 42.19 1.81 Z M 43.01 12.03 L 48.11 12.03 L 45.56 5.51 L 43.01 12.03 Z" />
+        </svg>
       </div>
       <div class="top-actions">
-        <div class="pill" id="pill">Подбор продуктов</div>
+        <div class="pill" id="pill"><span class="badge-ekom">E-KOM</span> <span>Подбор продуктов</span></div>
         <button class="icon-btn" id="settingsBtn" title="Настройки интеграций" aria-label="Настройки">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
@@ -899,7 +912,9 @@ function go(screen){
 
 function render(){
   clearInterval(countdownTimer);
-  document.getElementById("pill").textContent = state.screen === "answers" ? "База лидов" : "Подбор продуктов";
+  document.getElementById("pill").innerHTML = state.screen === "answers" 
+    ? '<span class="badge-ekom">АДМИН</span> <span>База лидов</span>' 
+    : '<span class="badge-ekom">E-KOM</span> <span>Подбор продуктов</span>';
   
   if(state.screen === "start") renderStart();
   else if(state.screen === "q") renderQuestion();
@@ -918,17 +933,18 @@ function renderStart(){
   app.innerHTML =
     '<section class="screen">' +
       '<div class="hero">' +
-        '<svg class="hero-shape" viewBox="0 0 200 200" aria-hidden="true"><defs><radialGradient id="g" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#E9FF9A"/><stop offset=".55" stop-color="#7BC800"/><stop offset="1" stop-color="#3E8A00"/></radialGradient></defs><path d="M40 20c45-18 120-12 145 30s-5 92-40 118S48 196 26 156 -5 38 40 20z" fill="url(#g)" opacity=".75"/></svg>' +
+        '<img src="hero_ribbon.jpg" class="hero-shape" alt="" aria-hidden="true">' +
         '<div class="hero-body">' +
-          '<h1 class="sr-heading" tabindex="-1" data-focus>Подберём идеальные e-com продукты для вашего бизнеса</h1>' +
+          '<div class="hero-tag">ЭКОСИСТЕМА АЛЬФА-БАНКА</div>' +
+          '<h1 class="sr-heading" tabindex="-1" data-focus>Подберём продукты е-ком для вашего бизнеса</h1>' +
           '<ul class="hero-facts">' +
             '<li><span class="tick"></span>8 точных вопросов</li>' +
             '<li><span class="tick"></span>Около 2 минут</li>' +
-            '<li><span class="tick"></span>Персональная стратегия</li>' +
+            '<li><span class="tick"></span>Решение для каждого клиента</li>' +
           '</ul>' +
         '</div>' +
         '<div class="hero-bar">' +
-          '<p>Свой интернет-магазин, мобильное приложение, маркетплейсы, реклама и оптимизация конверсии в экосистеме Альфа-Банка</p>' +
+          '<p>Свой интернет-магазин, мобильное приложение, аналитика маркетплейсов, реклама и конверсия</p>' +
           '<button class="btn btn-lime" id="startBtn">Пройти квиз</button>' +
         '</div>' +
       '</div>' +
