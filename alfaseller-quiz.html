@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Альфа Селлер">
+<meta name="format-detection" content="telephone=no">
+<title>Альфа Селлер — Подбор продуктов для бизнеса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F5F6F8;
+  --paper:#FFFFFF;
+  --panel:#F0F1F4;
+  --panel-hover:#E6E8ED;
+  --text:#1B1B21;
+  --muted:#666672;
+  --bar:#1B1B21;
+  --on-bar:#FFFFFF;
+  --lime:#A8EB00;
+  --lime-hover:#99D800;
+  --on-lime:#1B1B21;
+  --red:#EF3124;
+  --field:#F7F8FA;
+  --border:#D8D9E0;
+  --focus:#1B1B21;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --bg:#111114;
+    --paper:#18181D;
+    --panel:#25252C;
+    --panel-hover:#2E2E36;
+    --text:#F1F1F3;
+    --muted:#A4A4AE;
+    --bar:#000000;
+    --on-bar:#FFFFFF;
+    --field:#202027;
+    --border:#36363F;
+    --focus:#A8EB00;
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100%;
+  background:var(--bg);color:var(--text);
+  font-family:"Onest",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:18px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+
+.shell{
+  max-width:1120px;margin:0 auto;
+  padding:clamp(12px,2.4vw,24px) clamp(12px,2.6vw,28px) clamp(16px,3vw,32px);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+.frame{
+  flex:1;display:flex;flex-direction:column;
+  background:var(--paper);
+  border:2.5px solid var(--lime);border-radius:32px;
+  padding:clamp(18px,3.2vw,38px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.04);
+}
+.top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:clamp(16px,2.6vw,26px);user-select:none;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-weight:800;font-size:clamp(19px,2.2vw,22px);
+  letter-spacing:-0.02em;cursor:pointer;
+}
+.brand svg{width:26px;height:26px;flex:none;color:var(--text)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.pill{
+  background:var(--lime);color:var(--on-lime);
+  font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;
+  white-space:nowrap;user-select:none;
+}
+.icon-btn{
+  background:none;border:0;padding:8px;border-radius:12px;
+  cursor:pointer;color:var(--muted);display:inline-flex;align-items:center;
+}
+.icon-btn:hover{color:var(--text);background:var(--panel)}
+.tick{
+  display:inline-block;width:13px;height:12px;
+  background:var(--red);transform:skewX(-22deg);border-radius:1px;flex:none;
+}
+.screen{flex:1;display:flex;flex-direction:column;animation:enter .24s ease-out}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.screen{animation:none}}
+.sr-heading:focus{outline:none}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:64px;padding:16px 36px;border-radius:999px;border:0;cursor:pointer;
+  font-weight:700;font-size:19px;
+  background:var(--bar);color:var(--on-bar);
+  transition:transform .12s ease, opacity .15s ease;
+  user-select:none;-webkit-user-select:none;
+}
+.btn:active{transform:scale(0.98)}
+.btn-lime{background:var(--lime);color:var(--on-lime)}
+.btn-lime:hover{background:var(--lime-hover)}
+.btn[disabled]{opacity:.35;cursor:not-allowed;pointer-events:none}
+.btn-ghost{
+  background:none;border:0;min-height:56px;padding:14px 18px;
+  font-weight:600;font-size:18px;color:var(--muted);cursor:pointer;
+}
+.btn-ghost:hover{color:var(--text)}
+.btn-small{min-height:46px;padding:10px 22px;font-size:16px;border-radius:999px}
+.btn-outline{background:none;border:2px solid var(--border);color:var(--text)}
+.btn-outline:hover{background:var(--panel)}
+
+/* Start / Hero */
+.hero{
+  flex:1;display:flex;flex-direction:column;
+  background:var(--lime);color:var(--on-lime);
+  border-radius:28px;overflow:hidden;position:relative;
+}
+.hero-body{
+  flex:1;padding:clamp(26px,4.5vw,56px);
+  display:flex;flex-direction:column;justify-content:center;gap:26px;
+  position:relative;z-index:1;
+}
+.hero h1{
+  margin:0;font-size:clamp(36px,5.8vw,72px);line-height:1.02;
+  font-weight:800;letter-spacing:-0.035em;max-width:14ch;
+}
+.hero-facts{
+  list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
+  gap:12px 28px;font-size: clamp(17px,2vw,20px);font-weight:700;
+}
+.hero-facts li{display:flex;align-items:center;gap:10px}
+.hero-shape{
+  position:absolute;right:-4%;top:-16%;width:min(54%,500px);
+  aspect-ratio:1;z-index:0;pointer-events:none;
+}
+.hero-bar{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  background:var(--bar);color:var(--on-bar);
+  margin:0 clamp(14px,2.2vw,24px) clamp(14px,2.2vw,24px);
+  border-radius:999px;padding:12px 12px 12px clamp(20px,3vw,32px);
+}
+.hero-bar p{margin:0;font-size:clamp(16px,1.8vw,18px);font-weight:500;max-width:54ch}
+@media (max-width:740px){
+  .hero-bar{border-radius:24px;padding:20px}
+  .hero-bar .btn{width:100%}
+}
+
+/* Question Screen */
+.progress{
+  display:flex;align-items:center;gap:18px;
+  background:var(--bar);color:var(--on-bar);
+  border-radius:999px;padding:12px 24px;
+}
+.progress-label{font-weight:700;font-size:16px;white-space:nowrap}
+.progress-track{flex:1;display:flex;gap:6px}
+.progress-track span{
+  flex:1;height:8px;border-radius:99px;
+  background:rgba(255,255,255,.2);transform:skewX(-22deg);
+}
+.progress-track span.on{background:var(--lime)}
+.qtitle{
+  margin:clamp(20px,3.2vw,36px) 0 6px;
+  font-size:clamp(26px,3.8vw,42px);line-height:1.12;
+  font-weight:800;letter-spacing:-0.025em;max-width:24ch;
+}
+.qhint{margin:0;color:var(--muted);font-size:clamp(16px,1.9vw,18px)}
+.options{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:14px;margin-top:clamp(18px,2.6vw,28px);
+}
+.opt{
+  display:flex;align-items:center;gap:16px;text-align:left;
+  min-height:76px;padding:18px 24px;border-radius:22px;
+  background:var(--panel);border:2px solid transparent;cursor:pointer;
+  font-size:clamp(17px,2vw,19px);font-weight:600;line-height:1.3;
+  transition:background-color .15s ease, transform .1s ease, border-color .15s ease;
+  user-select:none;-webkit-user-select:none;
+}
+.opt:active{transform:scale(0.99)}
+.opt:hover{background:var(--panel-hover)}
+.opt[aria-pressed="true"]{
+  background:var(--lime);color:var(--on-lime);
+  border-color:rgba(0,0,0,0.08);
+}
+.opt[aria-pressed="true"] .tick{background:var(--on-lime)}
+.opt[disabled]{opacity:.38;cursor:not-allowed}
+.nav{
+  margin-top:auto;padding-top:clamp(22px,3vw,34px);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+
+/* Contacts Form */
+.form{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px 22px;margin-top:clamp(18px,2.6vw,28px);
+}
+@media (max-width:720px){.form{grid-template-columns:1fr}}
+.field label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
+.field label span{color:var(--muted);font-weight:500}
+.field input{
+  width:100%;min-height:62px;padding:14px 20px;border-radius:18px;
+  border:2px solid var(--border);background:var(--field);
+  font-size:18px;font-weight:600;transition:border-color .15s ease;
+}
+.field input:focus{border-color:var(--lime);outline:none;background:var(--paper)}
+.field input[aria-invalid="true"]{border-color:var(--red)}
+.err{color:var(--red);font-size:14px;font-weight:700;margin-top:6px;min-height:1px}
+.consent{
+  grid-column:1/-1;display:flex;gap:14px;align-items:flex-start;
+  background:var(--panel);border-radius:18px;padding:16px 20px;cursor:pointer;
+  font-size:15px;line-height:1.45;user-select:none;
+}
+.consent input{width:26px;height:26px;margin:2px 0 0;flex:none;accent-color:var(--lime)}
+
+/* Result Screen */
+.result-head{
+  align-self:center;background:var(--bar);color:var(--on-bar);
+  border-radius:999px;padding:12px 42px;margin:0;
+  font-size:clamp(22px,2.8vw,28px);font-weight:800;letter-spacing:-0.015em;text-align:center;
+}
+.result-lead{text-align:center;color:var(--muted);margin:12px auto 0;max-width:50ch;font-size:18px}
+.main-card{
+  margin-top:clamp(18px,2.6vw,28px);
+  background:var(--lime);color:var(--on-lime);border-radius:28px;
+  padding:clamp(22px,3.4vw,38px);
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px 36px;
+  box-shadow:0 8px 30px rgba(168,235,0,0.22);
+}
+@media (max-width:820px){.main-card{grid-template-columns:1fr}}
+.main-card h3{margin:0;font-size:clamp(30px,4.2vw,46px);line-height:1.05;font-weight:800;letter-spacing:-0.03em}
+.main-card .desc{margin:14px 0 0;font-size:18px;line-height:1.4;max-width:40ch}
+.budget-badge{
+  display:inline-block;margin-top:18px;font-weight:800;font-size:17px;
+  background:rgba(27,27,33,0.08);padding:8px 16px;border-radius:12px;
+}
+.why{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;align-self:center}
+.why li{display:flex;gap:12px;align-items:flex-start;font-size:17px;font-weight:600;line-height:1.35}
+.why .tick{margin-top:5px}
+.main-card .why{background:rgba(255,255,255,.62);border-radius:22px;padding:22px 24px}
+.extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
+.extra{border:2.5px solid var(--lime);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:12px;background:var(--paper)}
+.extra h4{margin:0;font-size:24px;font-weight:800;letter-spacing:-0.02em;line-height:1.15}
+.extra .desc{margin:0;color:var(--muted);font-size:16px;line-height:1.4}
+.extra .why{background:var(--panel);border-radius:18px;padding:16px 20px;align-self:stretch}
+.extra .why li{font-size:15.5px}
+.extra .budget-badge{margin-top:auto;font-size:15.5px;align-self:flex-start}
+.next-bar{
+  margin-top:18px;background:var(--panel);border-radius:24px;padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+}
+.next-bar p{margin:0;max-width:58ch;font-size:16.5px;line-height:1.4}
+.next-bar .meta{font-size:14px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:12px}
+.status-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;
+  font-size:13px;font-weight:700;
+}
+.status-pill.ok{background:#E2F7D1;color:#1F6E00}
+.status-pill.offline{background:#FFF3CD;color:#856404}
+
+/* Admin / Answers Panel */
+.ans-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ans-top h1{margin:0;font-size:clamp(26px,3.4vw,36px);font-weight:800;letter-spacing:-0.025em}
+.ans-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:20px}
+@media (max-width:800px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:540px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{
+  border-radius:20px;padding:16px 18px;background:var(--panel);
+  text-align:left;border:2px solid transparent;cursor:pointer;
+  transition:all .15s ease;
+}
+.stat b{display:block;font-size:32px;font-weight:800;line-height:1;letter-spacing:-0.02em}
+.stat span{font-size:14.5px;font-weight:600;color:var(--muted)}
+.stat[aria-pressed="true"]{background:var(--bar);color:var(--on-bar);border-color:var(--bar)}
+.stat[aria-pressed="true"] span{color:rgba(255,255,255,0.7)}
+.search-bar{margin-top:16px;display:flex;gap:10px}
+.search-input{
+  flex:1;min-height:50px;padding:10px 18px;border-radius:14px;
+  border:2px solid var(--border);background:var(--field);font-size:16px;
+}
+.table-wrap{
+  overflow-x:auto;margin-top:16px;border:2px solid var(--border);
+  border-radius:20px;background:var(--paper);
+}
+table{border-collapse:collapse;width:100%;min-width:980px;font-size:15px}
+th,td{text-align:left;padding:14px 16px;vertical-align:middle;border-bottom:1px solid var(--panel)}
+th{font-weight:700;background:var(--panel);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:rgba(0,0,0,0.015)}
+td .small{color:var(--muted);font-size:13.5px;margin-top:2px}
+.temp{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px;white-space:nowrap}
+.temp-hot{background:var(--red);color:#fff}
+.temp-warm{background:var(--lime);color:var(--on-lime)}
+.temp-cold{background:var(--panel);color:var(--text);border:1px solid var(--border)}
+.sync-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700}
+.sync-tag.synced{background:#E2F7D1;color:#1F6E00}
+.sync-tag.pending{background:#FFF3CD;color:#856404}
+.empty{margin-top:18px;background:var(--panel);border-radius:20px;padding:36px;text-align:center;color:var(--muted)}
+.note{font-size:14px;color:var(--muted);margin-top:12px}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:100;backdrop-filter:blur(3px);
+}
+.modal{
+  background:var(--paper);border-radius:28px;max-width:680px;width:100%;
+  max-height:90vh;overflow-y:auto;padding:clamp(22px,3vw,34px);
+  border:2px solid var(--lime);box-shadow:0 20px 50px rgba(0,0,0,0.25);
+}
+.modal h2{margin:0 0 16px;font-size:26px;font-weight:800}
+.modal-close{float:right;background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted)}
+.settings-group{margin-bottom:18px}
+.settings-group label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}
+.settings-group input{
+  width:100%;min-height:50px;padding:10px 16px;border-radius:12px;
+  border:2px solid var(--border);background:var(--field);font-size:15px;
+}
+.settings-group .help{font-size:13px;color:var(--muted);margin-top:4px}
+.toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%);background:var(--bar);color:var(--on-bar);
+  padding:14px 28px;border-radius:999px;font-weight:700;font-size:16px;z-index:120;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);animation:enter .2s ease-out;
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="frame">
+    <header class="top">
+      <div class="brand" id="brandLogo" title="Нажмите 5 раз для панели лидов">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h5v7.2L16.6 3H23l-9.2 8.6L23 21h-6.6l-7.4-7.6V21H4z" fill="currentColor"/></svg>
+        Альфа Селлер
+      </div>
+      <div class="top-actions">
+        <div class="pill" id="pill">Подбор продуктов</div>
+        <button class="icon-btn" id="settingsBtn" title="Настройки интеграций" aria-label="Настройки">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+    <main id="app"></main>
+  </div>
+</div>
+
+<div id="modalSlot"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ========================================================
+   1. PRODUCTS CATALOG & QUESTIONS CONFIGURATION
+   ======================================================== */
+var PRODUCTS = {
+  start: {
+    name: "Альфа-Селлер Старт",
+    core: true,
+    desc: "Свой интернет-магазин за 1 день без разработчиков: перенос каталога с маркетплейсов, приём оплаты, доставка и AI-помощник.",
+    budget: "от 950 ₽/мес."
+  },
+  profi: {
+    name: "Альфа-Селлер Профи",
+    core: true,
+    desc: "Интернет-магазин и мобильное приложение в одной панели: 1С, МойСклад, программа лояльности, CRM и управление маркетплейсами. Готовое решение «Ресто» для доставки ресторанов.",
+    budget: "от 2 000 ₽/мес."
+  },
+  ent: {
+    name: "Альфа-Селлер Enterprise",
+    core: true,
+    desc: "Платформа для крупного бизнеса: микросервисная модернизация отдельных частей сайта без переделки целиком, выдерживает пиковые нагрузки акций.",
+    budget: "0,3–0,5% GMV в год"
+  },
+  mg: {
+    name: "MarketGuru",
+    core: true,
+    desc: "Точная аналитика и инструменты продаж на WB и Ozon: биддер рекламы, репрайсер, Оракул AI, SEO-оптимайзер и автоответы.",
+    budget: "от 2 495 ₽/мес."
+  },
+  wib: {
+    name: "WhoIsBlogger (WIB)",
+    core: true,
+    desc: "Оцифровка инфлюенс-маркетинга: подбор блогеров по реальным покупкам аудитории, анализ конкурентов и замер эффективности (BrandLift / SalesLift).",
+    budget: "≈ 400 000 ₽/мес."
+  },
+  martech: {
+    name: "Flocktory MARTECH",
+    core: true,
+    desc: "Рост продаж с уже привлечённого на сайт трафика: проведение A/B-тестов, подсказки и напоминания покупателям без нагрузки на вашу разработку.",
+    budget: "от 150 000 ₽/мес."
+  },
+  perf: {
+    name: "Flocktory PERFORMANCE",
+    core: true,
+    desc: "Витрина подарков на Thank You Page: привлечение новых покупателей через топовых партнёров и монетизация трафика собственного сайта.",
+    budget: "от 500 000 ₽/мес."
+  },
+  ads: {
+    name: "Альфа-Реклама",
+    core: true,
+    desc: "Единый рекламный кабинет (Яндекс, VK, Авито, Telegram) с кэшбэком до 15%, запуск под ключ, а также DSP Рунета и витрина в приложении банка (44 млн чел.).",
+    budget: "от 100 000 ₽/мес."
+  },
+  podeli: {
+    name: "Сервис «Подели» (BNPL)",
+    core: false,
+    desc: "Покупатели оплачивают заказ 4 равными долями без переплат и кредитов, а магазин получает 100% стоимости на следующий рабочий день.",
+    budget: "без абонентской платы"
+  },
+  rko: {
+    name: "РКО и торговый эквайринг Альфа-Банка",
+    core: false,
+    desc: "Бизнес-счёт от 0 ₽ навсегда, торговый эквайринг 1% с бесплатной арендой терминалов, бесплатная бухгалтерия и поддержка по 115-ФЗ.",
+    budget: "счёт от 0 ₽"
+  }
+};
+
+var ORDER = ["start","profi","ent","mg","ads","martech","wib","perf","podeli","rko"];
+var TEMP_LABEL = {hot:"🔥 Горячий", warm:"☀️ Тёплый", cold:"❄️ Холодный"};
+
+var QUESTIONS = [
+  {
+    id: "channels",
+    title: "Где вы сейчас продаёте?",
+    hint: "Можно выбрать несколько вариантов",
+    type: "multi",
+    exclusive: ["none"],
+    options: [
+      ["mp", "Маркетплейсы (Wildberries, Ozon, Яндекс Маркет)"],
+      ["site", "Свой интернет-магазин или сайт"],
+      ["social", "Соцсети и мессенджеры (Telegram, VK)"],
+      ["offline", "Офлайн-магазины / торговые точки"],
+      ["none", "Пока не продаю (только планирую старт)"]
+    ]
+  },
+  {
+    id: "industry",
+    title: "В какой сфере ваш бизнес?",
+    hint: "Выберите основное направление",
+    type: "single",
+    options: [
+      ["fashion", "Одежда, обувь, аксессуары"],
+      ["home", "Товары для дома, мебель, ремонт"],
+      ["beauty_fmcg", "Красота, здоровье, косметика, FMCG"],
+      ["electronics", "Электроника, техника, автотовары"],
+      ["food_resto", "Общепит, кафе, доставка еды"],
+      ["other", "Другие товары или B2B"]
+    ]
+  },
+  {
+    id: "turnover",
+    title: "Какой у вас ежемесячный оборот?",
+    hint: "Один вариант",
+    type: "single",
+    when: function(a){ return !onlyNone(a); },
+    options: [
+      ["t1", "До 1 млн ₽"],
+      ["t2", "1–5 млн ₽"],
+      ["t3", "5–30 млн ₽"],
+      ["t4", "Больше 30 млн ₽"]
+    ]
+  },
+  {
+    id: "site",
+    title: "Что сейчас с вашим сайтом?",
+    hint: "Можно выбрать несколько вариантов",
+    type: "multi",
+    exclusive: ["ok"],
+    when: function(a){ return has(a.channels, "site"); },
+    options: [
+      ["ok", "Всё устраивает"],
+      ["conv", "Трафик есть, но покупают мало (низкая конверсия)"],
+      ["repeat", "Мало повторных покупок"],
+      ["slow", "Тормозит на акциях, доработки долгие и дорогие"],
+      ["integr", "Нужны интеграции: 1С, МойСклад, CRM"]
+    ]
+  },
+  {
+    id: "pains",
+    title: "Что сейчас больше всего мешает расти?",
+    hint: "Выберите до двух вариантов",
+    type: "multi",
+    max: 2,
+    options: [
+      ["mp_down", "Продажи на маркетплейсах падают или не приносят прибыль"],
+      ["ads_bad", "Реклама не окупается / сливается бюджет"],
+      ["few_buyers", "Не хватает новых покупателей и трафика"],
+      ["bloggers_fail", "Реклама у блогеров не сработала или сложно выбрать"],
+      ["chaos", "Продажи в разных каналах разрозненны, нет единого учёта"],
+      ["no_team", "Нет своих разработчиков или маркетолога"],
+      ["profit", "Непонятно, какие товары реально дают прибыль"]
+    ]
+  },
+  {
+    id: "plans",
+    title: "Что планируете запустить в ближайшие полгода?",
+    hint: "Можно выбрать до трёх вариантов",
+    type: "multi",
+    max: 3,
+    exclusive: ["nothing"],
+    options: [
+      ["shop", "Свой интернет-магазин"],
+      ["app", "Мобильное приложение для клиентов"],
+      ["mp_enter", "Выход на WB или Ozon"],
+      ["ads", "Рекламу в Яндексе, VK, Авито, Telegram"],
+      ["bloggers", "Рекламу у блогеров"],
+      ["loyalty", "Программу лояльности или CRM"],
+      ["bnpl", "Оплату частями для покупателей (BNPL)"],
+      ["nothing", "Пока ничего конкретного"]
+    ]
+  },
+  {
+    id: "budget",
+    title: "Сколько готовы вкладывать в маркетинг в месяц?",
+    hint: "Один вариант",
+    type: "single",
+    options: [
+      ["b1", "До 50 000 ₽"],
+      ["b2", "50 000 – 150 000 ₽"],
+      ["b3", "150 000 – 500 000 ₽"],
+      ["b4", "Больше 500 000 ₽"]
+    ]
+  },
+  {
+    id: "bank",
+    title: "Вы клиент Альфа-Банка?",
+    hint: "Один вариант",
+    type: "single",
+    options: [
+      ["rko", "Да, открыт расчётный счёт"],
+      ["rko_acq", "Да, счёт и торговый эквайринг"],
+      ["no", "Пока нет"]
+    ]
+  }
+];
+
+/* ========================================================
+   2. CONFIGURATION & SETTINGS STORAGE
+   ======================================================== */
+var SETTINGS_KEY = "as_quiz_settings";
+var LEADS_KEY = "as_quiz_leads_v2";
+
+function getSettings(){
+  try {
+    return Object.assign({
+      googleScriptUrl: "",
+      yandexWebhookUrl: "",
+      telegramBotToken: "",
+      telegramChatId: ""
+    }, JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"));
+  } catch(e){
+    return {googleScriptUrl:"", yandexWebhookUrl:"", telegramBotToken:"", telegramChatId:""};
+  }
+}
+function saveSettings(s){
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch(e){}
+}
+
+/* ========================================================
+   3. HELPERS
+   ======================================================== */
+function has(arr, v){ return Array.isArray(arr) && arr.indexOf(v) !== -1; }
+function onlyNone(a){ return Array.isArray(a.channels) && a.channels.length === 1 && a.channels[0] === "none"; }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+function labelOf(qid, val){
+  var q = QUESTIONS.filter(function(x){return x.id===qid;})[0]; if(!q) return val;
+  var o = q.options.filter(function(x){return x[0]===val;})[0]; return o ? o[1] : val;
+}
+function labelsOf(qid, v){
+  if(v == null || v === "") return "";
+  return (Array.isArray(v) ? v : [v]).map(function(x){ return labelOf(qid, x); }).join("; ");
+}
+function visibleQuestions(){ return QUESTIONS.filter(function(q){ return !q.when || q.when(state.answers); }); }
+function isAnswered(q){
+  var v = state.answers[q.id];
+  return q.type === "single" ? !!v : Array.isArray(v) && v.length > 0;
+}
+function phoneDigits(v){
+  var d = String(v||"").replace(/\D/g,"");
+  if(d.length === 10) d = "7" + d;
+  if(d.length === 11 && d[0] === "8") d = "7" + d.slice(1);
+  return d;
+}
+function fmtPhone(v){
+  var d = phoneDigits(v);
+  if(d.length !== 11) return v;
+  return "+7 (" + d.slice(1,4) + ") " + d.slice(4,7) + "-" + d.slice(7,9) + "-" + d.slice(9,11);
+}
+function newId(){ return "lead_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function toast(msg){
+  var t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 2800);
+}
+
+/* ========================================================
+   4. RECOMMENDATION & LEAD SCORING ALGORITHM
+   ======================================================== */
+function recommend(a){
+  var ch = a.channels || [], site = a.site || [], pains = a.pains || [], plans = a.plans || [];
+  var ind = a.industry;
+  var T = {t1:1, t2:2, t3:3, t4:4}[a.turnover] || 0;
+  var B = {b1:1, b2:2, b3:3, b4:4}[a.budget] || 0;
+  var hasSite = has(ch, "site");
+  var sellsCount = ch.filter(function(x){return x!=="none";}).length;
+  var res = {};
+
+  function add(p, pts, reason){
+    if(!res[p]) res[p] = {score:0, reasons:[]};
+    res[p].score += pts;
+    if(reason && res[p].reasons.indexOf(reason) === -1) res[p].reasons.push(reason);
+  }
+
+  // 1. Альфа-Селлер СТАРТ
+  if(!hasSite && T <= 2){
+    if(has(ch,"mp")) add("start", 3, "Продаёте на маркетплейсах, а своего магазина пока нет");
+    if(has(ch,"social")) add("start", 2, "Магазин примет заказы и оплату из соцсетей автоматически");
+    if(has(ch,"none")) add("start", 3, "Быстрый запуск без вложений в разработку");
+    if(has(plans,"shop")) add("start", 3, "Планируете свой интернет-магазин");
+    if(has(pains,"no_team")) add("start", 2, "Запустите сами за 1 день, без программистов");
+    if(has(pains,"mp_down")) add("start", 2, "Свой магазин снижает зависимость от маркетплейсов");
+    if(has(ch,"offline")) add("start", 1, "У офлайн-точки появится онлайн-витрина");
+  }
+
+  // 2. Альфа-Селлер ПРОФИ
+  if(ind === "food_resto"){
+    add("profi", 4, "Готовое решение «Ресто»: сайт и приложение для доставки ресторанов");
+  }
+  if(T >= 2){
+    if(sellsCount >= 2) add("profi", 2, "Продаёте в нескольких каналах: всё в единой панели");
+    if(has(pains,"chaos")) add("profi", 3, "Соберёт заказы и остатки из всех каналов в одной системе");
+    if(has(plans,"app")) add("profi", 3, "Полноценное мобильное приложение входит в тариф");
+    if(has(plans,"loyalty")) add("profi", 3, "Программа лояльности и CRM из коробки");
+    if(has(site,"integr")) add("profi", 3, "Готовые интеграции с 1С и МойСклад");
+    if(has(site,"repeat")) add("profi", 2, "Лояльность и автокоммуникации возвращают покупателей");
+    if(!hasSite && has(plans,"shop") && T >= 3) add("profi", 3, "Магазин сразу с учётом, CRM и лояльностью");
+  } else if(has(plans,"app") || has(plans,"loyalty")){
+    add("profi", 2, has(plans,"app") ? "Мобильное приложение входит в тариф" : "Программа лояльности и CRM из коробки");
+  }
+
+  // 3. Альфа-Селлер ENTERPRISE
+  if(T === 4){
+    if(hasSite) add("ent", 3, "Крупный оборот и индивидуальные требования к платформе");
+    if(has(site,"slow")) add("ent", 4, "Микросервисы выдерживают пики акций без переделки сайта");
+    if(has(site,"integr")) add("ent", 2, "Индивидуальная связка магазина с любыми системами компании");
+  } else if(T === 3 && has(site,"slow")){
+    add("ent", 3, "Доработаем отдельные части сайта без переделки целиком");
+  }
+
+  // 4. MarketGuru
+  if(has(ch,"mp") || has(plans,"mp_enter")){
+    if(has(plans,"mp_enter")) add("mg", 4, "Поможет выбрать нишу и быстро выйти на WB и Ozon");
+    if(has(pains,"mp_down")) add("mg", 3, "Точная аналитика покажет, где теряются продажи");
+    if(has(pains,"ads_bad") && has(ch,"mp")) add("mg", 3, "Умный биддер и репрайсер настроят внутреннюю рекламу");
+    if(has(pains,"profit")) add("mg", 3, "Оцифрует точную юнит-экономику каждого товара");
+    if(has(ch,"mp") && !res.mg) add("mg", 2, "Аналитика, SEO-оптимизация карточек и автоответы");
+  }
+
+  // 5. WhoIsBlogger (WIB)
+  if(B >= 3 || ind === "fashion" || ind === "beauty_fmcg"){
+    if(has(plans,"bloggers")) add("wib", 4, "Подберёт блогеров по реальным покупкам аудитории");
+    if(has(pains,"bloggers_fail")) add("wib", 4, "Анализ конкурентов и замер BrandLift / SalesLift");
+    if((ind === "fashion" || ind === "beauty_fmcg") && B >= 2) add("wib", 1, "Эффективный канал для ниши моды и красоты");
+  }
+
+  // 6. Flocktory MARTECH
+  if(hasSite && B >= 2){
+    if(has(site,"conv")) add("martech", 4, "A/B-тесты и подсказки растят конверсию с имеющегося трафика");
+    if(has(site,"repeat")) add("martech", 2, "Напоминания и механики вовлечения возвращают покупателей");
+  }
+
+  // 7. Flocktory PERFORMANCE
+  if(hasSite && (B === 4 || T >= 3)){
+    if(has(pains,"few_buyers")) add("perf", 3, "Новые покупатели через партнёрскую витрину подарков");
+    add("perf", 2, "Дополнительный доход от монетизации трафика сайта");
+  }
+
+  // 8. Альфа-Реклама
+  if(B >= 2){
+    var w = B >= 3 ? 0 : -1;
+    if(has(pains,"few_buyers")) add("ads", 3+w, "Приведём покупателей из Яндекса, VK, Авито и Telegram");
+    if(has(plans,"ads")) add("ads", 4+w, "Один кабинет для всех площадок и кэшбэк до 15%");
+    if(has(pains,"ads_bad") && !has(ch,"mp")) add("ads", 3+w, "Проверим и оптимизируем текущие рекламные кампании");
+    if(res.ads && (has(pains,"no_team") || B === 2)) add("ads", 2, "Поможем на старте и настроим всё под ключ");
+  }
+
+  // 9. Сервис «Подели» (BNPL)
+  if(has(plans,"bnpl")) add("podeli", 4, "Покупатели платят долями, магазин получает 100% на следующий день");
+  if(ind === "fashion" || ind === "beauty_fmcg" || ind === "home") add("podeli", 1, "Увеличивает средний чек и выкуп в ритейле");
+
+  // 10. РКО и эквайринг
+  if(a.bank === "no") add("rko", 3, "Бизнес-счёт от 0 ₽ навсегда, эквайринг и бесплатная бухгалтерия");
+  if(has(ch,"offline") && a.bank !== "rko_acq") add("rko", 3, "Торговый эквайринг 1% с бесплатной арендой терминалов");
+
+  var ids = Object.keys(res).filter(function(k){ return res[k].score > 0; });
+  ids.sort(function(x,y){ return (res[y].score - res[x].score) || (ORDER.indexOf(x) - ORDER.indexOf(y)); });
+
+  var core = ids.filter(function(k){ return PRODUCTS[k].core; });
+  var main = core[0];
+  if(!main){
+    main = hasSite ? "profi" : "start";
+    res[main] = {score:1, reasons:[hasSite ? "Интернет-магазин с интеграциями и мультиканальностью" : "Простой и быстрый запуск своего интернет-магазина"]};
+  }
+  var rest = ids.filter(function(k){ return k !== main; }).slice(0, 2);
+  return [main].concat(rest).map(function(k){ return {id:k, reasons:res[k].reasons.slice(0, 3)}; });
+}
+
+function temperature(a){
+  var T = {t1:1, t2:2, t3:3, t4:4}[a.turnover] || 0;
+  var B = {b1:1, b2:2, b3:3, b4:4}[a.budget] || 0;
+  var plans = (a.plans || []).filter(function(x){ return x !== "nothing"; });
+  if(onlyNone(a) || !a.channels) return "cold";
+  if((T >= 3 || B >= 3) && plans.length > 0) return "hot";
+  if(T >= 2 && plans.length >= 2) return "hot";
+  return "warm";
+}
+
+/* ========================================================
+   5. STORAGE & MULTI-DESTINATION DISPATCHER
+   ======================================================== */
+function getLeads(){
+  try { return JSON.parse(localStorage.getItem(LEADS_KEY) || "[]") || []; } catch(e){ return []; }
+}
+function saveLeads(list){
+  try { localStorage.setItem(LEADS_KEY, JSON.stringify(list)); } catch(e){}
+}
+function addLead(doc){
+  var list = getLeads();
+  list.unshift(doc);
+  saveLeads(list);
+}
+function updateLeadSync(id, status){
+  var list = getLeads();
+  for(var i=0; i<list.length; i++){
+    if(list[i].id === id){ list[i].synced = status; break; }
+  }
+  saveLeads(list);
+}
+
+function sendToTelegram(settings, doc){
+  if(!settings.telegramBotToken || !settings.telegramChatId) return Promise.resolve(false);
+  var token = settings.telegramBotToken.trim();
+  var chatId = settings.telegramChatId.trim();
+  
+  var text = "🔥 <b>Новый лид с квиза Альфа Селлер!</b>\n\n" +
+    "👤 <b>Имя:</b> " + esc(doc.name) + "\n" +
+    "📞 <b>Телефон:</b> <code>" + esc(doc.phone) + "</code>\n" +
+    (doc.telegram ? "✈️ <b>Telegram:</b> " + esc(doc.telegram) + "\n" : "") +
+    (doc.maxLogin ? "💬 <b>МАКС:</b> <code>" + esc(doc.maxLogin) + "</code>\n" : "") +
+    (doc.company ? "🏢 <b>Компания:</b> " + esc(doc.company) + "\n" : "") +
+    "\n🎯 <b>Сегмент:</b> " + TEMP_LABEL[doc.temperature] + "\n" +
+    "⭐ <b>Рекомендация:</b> <b>" + esc(doc.mainProduct) + "</b>\n" +
+    "📦 <b>Все продукты:</b> " + esc((doc.productNames||[]).join(", ")) + "\n\n" +
+    "📊 <b>Параметры:</b>\n" +
+    "• Отрасль: " + esc(doc.answersText.industry || "—") + "\n" +
+    "• Где продаёт: " + esc(doc.answersText.channels || "—") + "\n" +
+    "• Оборот: " + esc(doc.answersText.turnover || "—") + "\n" +
+    "• Бюджет: " + esc(doc.answersText.budget || "—") + "\n" +
+    "• Клиент банка: " + esc(doc.answersText.bank || "—");
+
+  return fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: text,
+      parse_mode: "HTML"
+    })
+  }).then(function(r){ return r.ok; }).catch(function(){ return false; });
+}
+
+function sendToWebhook(url, doc){
+  if(!url || !url.trim()) return Promise.resolve(false);
+  return fetch(url.trim(), {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(doc),
+    mode: "no-cors" // Supports Google Apps Script redirects without CORS failure
+  }).then(function(){ return true; }).catch(function(){ return false; });
+}
+
+function dispatchLead(doc){
+  var settings = getSettings();
+  var promises = [];
+  if(settings.telegramBotToken && settings.telegramChatId){
+    promises.push(sendToTelegram(settings, doc));
+  }
+  if(settings.googleScriptUrl){
+    promises.push(sendToWebhook(settings.googleScriptUrl, doc));
+  }
+  if(settings.yandexWebhookUrl){
+    promises.push(sendToWebhook(settings.yandexWebhookUrl, doc));
+  }
+
+  if(promises.length === 0){
+    // No remote webhooks set, lead safely stored locally
+    return Promise.resolve("local_only");
+  }
+
+  return Promise.all(promises).then(function(results){
+    var anySuccess = results.some(function(r){ return r === true; });
+    updateLeadSync(doc.id, anySuccess);
+    return anySuccess ? "sent" : "queued";
+  }).catch(function(){
+    updateLeadSync(doc.id, false);
+    return "queued";
+  });
+}
+
+function syncPendingLeads(){
+  var leads = getLeads();
+  var pending = leads.filter(function(l){ return !l.synced; });
+  if(!pending.length) return Promise.resolve(0);
+  var settings = getSettings();
+  if(!settings.googleScriptUrl && !settings.yandexWebhookUrl && !settings.telegramBotToken){
+    return Promise.resolve(0);
+  }
+
+  var count = 0;
+  var chain = Promise.resolve();
+  pending.forEach(function(doc){
+    chain = chain.then(function(){
+      return dispatchLead(doc).then(function(res){
+        if(res === "sent") count++;
+      });
+    });
+  });
+  return chain.then(function(){ return count; });
+}
+
+/* ========================================================
+   6. STATE & UI ENGINE
+   ======================================================== */
+var app = document.getElementById("app");
+var state = fresh();
+var idleTimer = null, countdownTimer = null;
+var logoTapCount = 0, logoTapTimer = null;
+
+function fresh(){
+  return {
+    screen: "start",
+    qi: 0,
+    answers: {},
+    contact: { name: "", phone: "", telegram: "", maxLogin: "", company: "", consent: false },
+    result: null,
+    saveStatus: null,
+    errors: {}
+  };
+}
+
+function go(screen){
+  state.screen = screen;
+  render();
+}
+
+function render(){
+  clearInterval(countdownTimer);
+  document.getElementById("pill").textContent = state.screen === "answers" ? "База лидов" : "Подбор продуктов";
+  
+  if(state.screen === "start") renderStart();
+  else if(state.screen === "q") renderQuestion();
+  else if(state.screen === "contacts") renderContacts();
+  else if(state.screen === "result") renderResult();
+  else if(state.screen === "answers") renderAnswers();
+
+  var h = app.querySelector("[data-focus]");
+  if(h) h.focus({preventScroll:true});
+  window.scrollTo(0,0);
+  armIdle();
+}
+
+/* Screen 1: Start */
+function renderStart(){
+  app.innerHTML =
+    '<section class="screen">' +
+      '<div class="hero">' +
+        '<svg class="hero-shape" viewBox="0 0 200 200" aria-hidden="true"><defs><radialGradient id="g" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#E9FF9A"/><stop offset=".55" stop-color="#7BC800"/><stop offset="1" stop-color="#3E8A00"/></radialGradient></defs><path d="M40 20c45-18 120-12 145 30s-5 92-40 118S48 196 26 156 -5 38 40 20z" fill="url(#g)" opacity=".75"/></svg>' +
+        '<div class="hero-body">' +
+          '<h1 class="sr-heading" tabindex="-1" data-focus>Подберём идеальные e-com продукты для вашего бизнеса</h1>' +
+          '<ul class="hero-facts">' +
+            '<li><span class="tick"></span>8 точных вопросов</li>' +
+            '<li><span class="tick"></span>Около 2 минут</li>' +
+            '<li><span class="tick"></span>Персональная стратегия</li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="hero-bar">' +
+          '<p>Свой интернет-магазин, мобильное приложение, маркетплейсы, реклама и оптимизация конверсии в экосистеме Альфа-Банка</p>' +
+          '<button class="btn btn-lime" id="startBtn">Пройти квиз</button>' +
+        '</div>' +
+      '</div>' +
+    '</section>';
+  document.getElementById("startBtn").onclick = function(){
+    state = fresh();
+    state.screen = "q";
+    render();
+  };
+}
+
+/* Screen 2: Questions */
+function renderQuestion(){
+  var list = visibleQuestions();
+  if(state.qi >= list.length){ go("contacts"); return; }
+  var q = list[state.qi];
+  var val = state.answers[q.id];
+  var sel = q.type === "single" ? (val ? [val] : []) : (val || []);
+  var total = list.length;
+  
+  var seg = "";
+  for(var i=0; i<total; i++) seg += '<span class="' + (i <= state.qi ? "on" : "") + '"></span>';
+
+  var opts = q.options.map(function(o){
+    var on = sel.indexOf(o[0]) !== -1;
+    var dis = !on && q.max && sel.length >= q.max;
+    return '<button type="button" class="opt" data-v="' + o[0] + '" aria-pressed="' + on + '"' + (dis ? " disabled" : "") + '>' +
+      '<span class="tick"></span><span>' + esc(o[1]) + '</span></button>';
+  }).join("");
+
+  app.innerHTML =
+    '<section class="screen">' +
+      '<div class="progress" aria-label="Вопрос ' + (state.qi+1) + ' из ' + total + '">' +
+        '<span class="progress-label">Вопрос ' + (state.qi+1) + ' из ' + total + '</span>' +
+        '<span class="progress-track" aria-hidden="true">' + seg + '</span>' +
+      '</div>' +
+      '<h2 class="qtitle sr-heading" tabindex="-1" data-focus>' + esc(q.title) + '</h2>' +
+      '<p class="qhint">' + esc(q.hint) + '</p>' +
+      '<div class="options" role="group" aria-label="' + esc(q.title) + '">' + opts + '</div>' +
+      '<div class="nav">' +
+        '<button type="button" class="btn-ghost" id="backBtn">Назад</button>' +
+        '<button type="button" class="btn" id="nextBtn"' + (isAnswered(q) ? "" : " disabled") + '>Далее</button>' +
+      '</div>' +
+    '</section>';
+
+  app.querySelectorAll(".opt").forEach(function(b){
+    b.onclick = function(){
+      var v = b.getAttribute("data-v");
+      if(q.type === "single"){
+        state.answers[q.id] = v;
+        render();
+        return;
+      }
+      var cur = (state.answers[q.id] || []).slice();
+      var ex = q.exclusive || [];
+      if(cur.indexOf(v) !== -1){
+        cur = cur.filter(function(x){ return x !== v; });
+      } else if(ex.indexOf(v) !== -1){
+        cur = [v];
+      } else {
+        cur = cur.filter(function(x){ return ex.indexOf(x) === -1; });
+        if(q.max && cur.length >= q.max) return;
+        cur.push(v);
+      }
+      state.answers[q.id] = cur;
+      if(q.id === "channels"){
+        if(!has(cur, "site")) delete state.answers.site;
+        if(onlyNone(state.answers)) delete state.answers.turnover;
+      }
+      render();
+    };
+  });
+
+  document.getElementById("backBtn").onclick = function(){
+    if(state.qi === 0) go("start");
+    else { state.qi--; render(); }
+  };
+  document.getElementById("nextBtn").onclick = next;
+}
+
+function next(){
+  var list = visibleQuestions();
+  if(!isAnswered(list[state.qi])) return;
+  if(state.qi + 1 >= list.length) go("contacts");
+  else { state.qi++; render(); }
+}
+
+/* Screen 3: Contacts */
+function renderContacts(){
+  var c = state.contact, e = state.errors;
+  app.innerHTML =
+    '<section class="screen">' +
+      '<div class="progress">' +
+        '<span class="progress-label">Финальный шаг</span>' +
+        '<span class="progress-track" aria-hidden="true">' +
+          visibleQuestions().map(function(){ return '<span class="on"></span>'; }).join("") +
+        '</span>' +
+      '</div>' +
+      '<h2 class="qtitle sr-heading" tabindex="-1" data-focus>Куда направить персональную подборку?</h2>' +
+      '<p class="qhint">Специалист Альфа Селлер подготовит расчёт условий и бонусов для участников мероприятия</p>' +
+      '<form class="form" id="cform" novalidate>' +
+        field("name", "Имя и фамилия", "*", c.name, "text", "name", e.name, "Иван Петров") +
+        field("phone", "Номер телефона", "*", c.phone, "tel", "tel", e.phone, "+7 (999) 000-00-00") +
+        field("telegram", "Telegram", " (логин)", c.telegram, "text", "off", null, "@username") +
+        field("maxLogin", "Логин в МАКС", " (мессенджер)", c.maxLogin, "text", "off", null, "ваш логин в МАКС") +
+        field("company", "Название компании / бренда", " (необязательно)", c.company, "text", "organization", null, "ООО или бренд") +
+        '<label class="consent">' +
+          '<input type="checkbox" id="consent"' + (c.consent ? " checked" : "") + '>' +
+          '<span>Согласен на обработку персональных данных для связи со мной по подобранным продуктам экосистемы Альфа-Банка' +
+          (e.consent ? '<span class="err" style="display:block">' + esc(e.consent) + '</span>' : '') + '</span>' +
+        '</label>' +
+      '</form>' +
+      '<div class="nav">' +
+        '<button type="button" class="btn-ghost" id="backBtn">Назад</button>' +
+        '<button type="button" class="btn btn-lime" id="submitBtn">Показать результаты</button>' +
+      '</div>' +
+    '</section>';
+
+  ["name","phone","telegram","maxLogin","company"].forEach(function(k){
+    var el = document.getElementById("f-" + k);
+    if(el) el.oninput = function(){ state.contact[k] = el.value; };
+  });
+
+  var ph = document.getElementById("f-phone");
+  if(ph){
+    ph.onblur = function(){
+      ph.value = fmtPhone(ph.value);
+      state.contact.phone = ph.value;
+    };
+  }
+  document.getElementById("consent").onchange = function(ev){
+    state.contact.consent = ev.target.checked;
+  };
+  document.getElementById("cform").onsubmit = function(ev){
+    ev.preventDefault();
+    submit();
+  };
+  document.getElementById("backBtn").onclick = function(){
+    state.qi = visibleQuestions().length - 1;
+    go("q");
+  };
+  document.getElementById("submitBtn").onclick = submit;
+}
+
+function field(k, label, sub, val, type, ac, err, placeholder){
+  return '<div class="field">' +
+    '<label for="f-' + k + '">' + esc(label) + (sub ? ' <span>' + esc(sub) + '</span>' : '') + '</label>' +
+    '<input id="f-' + k + '" type="' + type + '"' +
+      (type === "tel" ? ' inputmode="tel"' : '') +
+      ' autocomplete="' + ac + '" autocapitalize="' + (k==="name"?"words":"none") + '" autocorrect="off"' +
+      ' placeholder="' + esc(placeholder || "") + '" value="' + esc(val) + '"' +
+      (err ? ' aria-invalid="true" aria-describedby="e-' + k + '"' : '') + '>' +
+    (err ? '<div class="err" id="e-' + k + '">' + esc(err) + '</div>' : '') +
+  '</div>';
+}
+
+function submit(){
+  var c = state.contact, errors = {};
+  if(!c.name.trim()) errors.name = "Пожалуйста, укажите ваше имя";
+  if(phoneDigits(c.phone).length !== 11) errors.phone = "Укажите номер полностью (10 цифр после +7)";
+  if(!c.consent) errors.consent = "Необходимо согласие для связи с вами";
+  state.errors = errors;
+
+  if(Object.keys(errors).length){
+    renderContacts();
+    var first = app.querySelector('[aria-invalid="true"]');
+    if(first) first.focus();
+    return;
+  }
+
+  var a = state.answers;
+  var recs = recommend(a);
+  var temp = temperature(a);
+  var now = new Date();
+
+  var doc = {
+    id: newId(),
+    createdAt: now.getTime(),
+    createdDate: now.toLocaleString("ru-RU", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}),
+    name: c.name.trim(),
+    phone: fmtPhone(c.phone),
+    telegram: c.telegram.trim(),
+    maxLogin: c.maxLogin.trim(),
+    company: c.company.trim(),
+    consent: true,
+    temperature: temp,
+    temperatureLabel: TEMP_LABEL[temp],
+    mainProduct: PRODUCTS[recs[0].id].name,
+    productIds: recs.map(function(r){ return r.id; }),
+    productNames: recs.map(function(r){ return PRODUCTS[r.id].name; }),
+    recommendationReasons: recs[0].reasons,
+    industry: labelOf("industry", a.industry),
+    channels: labelsOf("channels", a.channels),
+    turnover: labelsOf("turnover", a.turnover),
+    siteState: labelsOf("site", a.site),
+    pains: labelsOf("pains", a.pains),
+    plans: labelsOf("plans", a.plans),
+    budget: labelsOf("budget", a.budget),
+    bankClient: labelsOf("bank", a.bank),
+    answersText: {
+      industry: labelOf("industry", a.industry),
+      channels: labelsOf("channels", a.channels),
+      turnover: labelsOf("turnover", a.turnover),
+      site: labelsOf("site", a.site),
+      pains: labelsOf("pains", a.pains),
+      plans: labelsOf("plans", a.plans),
+      budget: labelsOf("budget", a.budget),
+      bank: labelsOf("bank", a.bank)
+    },
+    synced: false
+  };
+
+  addLead(doc);
+  state.result = recs;
+  state.saveStatus = "saving";
+  go("result");
+
+  dispatchLead(doc).then(function(res){
+    state.saveStatus = res;
+    var metaEl = document.getElementById("saveMeta");
+    if(metaEl){
+      if(res === "sent"){
+        metaEl.innerHTML = '<span class="status-pill ok">✓ Данные успешно отправлены</span>';
+      } else {
+        metaEl.innerHTML = '<span class="status-pill offline">💾 Сохранено на устройстве (офлайн)</span>';
+      }
+    }
+  });
+}
+
+/* Screen 4: Results */
+function whyList(reasons){
+  return '<ul class="why">' + reasons.map(function(r){
+    return '<li><span class="tick"></span><span>' + esc(r) + '</span></li>';
+  }).join("") + '</ul>';
+}
+
+function renderResult(){
+  var recs = state.result || [];
+  var main = recs[0], extras = recs.slice(1);
+  var mp = PRODUCTS[main.id];
+  var name = state.contact.name.trim();
+
+  app.innerHTML =
+    '<section class="screen">' +
+      '<h2 class="result-head sr-heading" tabindex="-1" data-focus>Ваша персональная подборка</h2>' +
+      '<p class="result-lead">' + (name ? esc(name) + ", вот " : "Вот ") + 'ключевые продукты для роста вашего бизнеса</p>' +
+      '<article class="main-card">' +
+        '<div>' +
+          '<h3>' + esc(mp.name) + '</h3>' +
+          '<p class="desc">' + esc(mp.desc) + '</p>' +
+          '<div class="budget-badge">Бюджет ' + esc(mp.budget) + '</div>' +
+        '</div>' +
+        whyList(main.reasons) +
+      '</article>' +
+      (extras.length ? '<div class="extras">' + extras.map(function(r){
+        var p = PRODUCTS[r.id];
+        return '<article class="extra">' +
+          '<h4>' + esc(p.name) + '</h4>' +
+          '<p class="desc">' + esc(p.desc) + '</p>' +
+          whyList(r.reasons) +
+          '<div class="budget-badge">Бюджет ' + esc(p.budget) + '</div>' +
+        '</article>';
+      }).join("") + '</div>' : '') +
+      '<div class="next-bar">' +
+        '<div>' +
+          '<p>Менеджер Альфа Селлер свяжется с вами или вы можете прямо сейчас подойти к экспертам на стенде и обсудить подборку.</p>' +
+          '<div class="meta">' +
+            '<span id="saveMeta">' +
+              (state.saveStatus === "sent" ? '<span class="status-pill ok">✓ Данные успешно отправлены</span>' :
+               state.saveStatus === "saving" ? 'Отправка данных…' : '<span class="status-pill offline">💾 Сохранено на устройстве</span>') +
+            '</span>' +
+            '<span id="countdown"></span>' +
+          '</div>' +
+        '</div>' +
+        '<button type="button" class="btn btn-lime" id="againBtn">Новая анкета</button>' +
+      '</div>' +
+    '</section>';
+
+  document.getElementById("againBtn").onclick = function(){
+    state = fresh();
+    render();
+  };
+
+  // Kiosk mode countdown (auto-reset on iPad)
+  var left = 90, cd = document.getElementById("countdown");
+  countdownTimer = setInterval(function(){
+    left--;
+    if(cd && left <= 30){
+      cd.textContent = "· Экран обновится через " + left + " с.";
+    }
+    if(left <= 0){
+      clearInterval(countdownTimer);
+      state = fresh();
+      render();
+    }
+  }, 1000);
+}
+
+/* ========================================================
+   7. ADMIN & LEADS PANEL (Screen 5)
+   ======================================================== */
+var answersFilter = "all", answersQuery = "";
+
+function renderAnswers(){
+  var docs = getLeads();
+  var counts = {all: docs.length, hot: 0, warm: 0, cold: 0, unsynced: 0};
+  docs.forEach(function(d){
+    counts[d.temperature] = (counts[d.temperature] || 0) + 1;
+    if(!d.synced) counts.unsynced++;
+  });
+
+  var filtered = docs.filter(function(d){
+    if(answersFilter === "hot" && d.temperature !== "hot") return false;
+    if(answersFilter === "warm" && d.temperature !== "warm") return false;
+    if(answersFilter === "cold" && d.temperature !== "cold") return false;
+    if(answersFilter === "unsynced" && d.synced) return false;
+    if(answersQuery){
+      var q = answersQuery.toLowerCase();
+      var hay = [d.name, d.phone, d.telegram, d.maxLogin, d.company, d.mainProduct, d.industry].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    }
+    return true;
+  });
+
+  var statsHtml = [
+    ["all", "Всего лидов"],
+    ["hot", "🔥 Горячие"],
+    ["warm", "☀️ Тёплые"],
+    ["cold", "❄️ Холодные"],
+    ["unsynced", "⏳ Офлайн (" + counts.unsynced + ")"]
+  ].map(function(s){
+    var active = answersFilter === s[0];
+    return '<button type="button" class="stat" data-f="' + s[0] + '" aria-pressed="' + active + '">' +
+      '<b>' + (counts[s[0]] || 0) + '</b><span>' + s[1] + '</span></button>';
+  }).join("");
+
+  var tableBody;
+  if(!filtered.length){
+    tableBody = '<div class="empty">' + (docs.length ? "По выбранному фильтру ничего не найдено." : "Пока нет сохранённых анкет. Заполните квиз, чтобы лиды появились здесь.") + '</div>';
+  } else {
+    tableBody = '<div class="table-wrap"><table><thead><tr>' +
+      '<th>Время</th><th>Контакт</th><th>МАКС / TG</th><th>Статус</th><th>Рекомендация</th><th>Индустрия и оборот</th><th>Синхронизация</th><th>Действия</th>' +
+    '</tr></thead><tbody>' +
+    filtered.map(function(d){
+      return '<tr>' +
+        '<td>' + esc(d.createdDate || "") + '</td>' +
+        '<td><b>' + esc(d.name) + '</b><div class="small">' + esc(d.phone) + '</div>' + (d.company ? '<div class="small">' + esc(d.company) + '</div>' : '') + '</td>' +
+        '<td>' + (d.maxLogin ? '<div>МАКС: <b>' + esc(d.maxLogin) + '</b></div>' : '') + (d.telegram ? '<div class="small">TG: ' + esc(d.telegram) + '</div>' : '') + '</td>' +
+        '<td><span class="temp temp-' + esc(d.temperature) + '">' + esc(TEMP_LABEL[d.temperature]) + '</span></td>' +
+        '<td><b>' + esc(d.mainProduct) + '</b><div class="small">' + esc((d.productNames || []).slice(1).join(", ")) + '</div></td>' +
+        '<td>' + esc(d.industry || "—") + '<div class="small">' + esc(d.answersText.turnover || "Оборот не указан") + '</div></td>' +
+        '<td><span class="sync-tag ' + (d.synced ? "synced" : "pending") + '">' + (d.synced ? "✓ Отправлен" : "💾 На iPad") + '</span></td>' +
+        '<td><button type="button" class="btn-small btn-outline view-lead-btn" data-id="' + d.id + '">Детали</button></td>' +
+      '</tr>';
+    }).join("") + '</tbody></table></div>';
+  }
+
+  app.innerHTML =
+    '<section class="screen">' +
+      '<div class="ans-top">' +
+        '<h1 class="sr-heading" tabindex="-1" data-focus>База контактов с мероприятия</h1>' +
+        '<div class="ans-actions">' +
+          '<button type="button" class="btn btn-small btn-lime" id="csvBtn">📥 Скачать Excel / CSV</button>' +
+          '<button type="button" class="btn btn-small btn-outline" id="syncBtn">🔄 Синхронизировать</button>' +
+          '<button type="button" class="btn btn-small" id="toQuiz">Вернуться к анкете</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="stats">' + statsHtml + '</div>' +
+      '<div class="search-bar">' +
+        '<input type="text" class="search-input" id="leadSearch" placeholder="Поиск по имени, телефону, МАКС, компании или продукту…" value="' + esc(answersQuery) + '">' +
+      '</div>' +
+      tableBody +
+      '<p class="note">Горячие лиды: оборот от 5 млн ₽ или бюджет от 150 000 ₽ с активными планами. Приоритетный контакт менеджером стенда.</p>' +
+    '</section>';
+
+  app.querySelectorAll(".stat").forEach(function(b){
+    b.onclick = function(){
+      answersFilter = b.getAttribute("data-f");
+      renderAnswers();
+    };
+  });
+
+  var searchInput = document.getElementById("leadSearch");
+  if(searchInput){
+    searchInput.oninput = function(){
+      answersQuery = searchInput.value;
+      renderAnswers();
+      var el = document.getElementById("leadSearch");
+      if(el){ el.focus(); el.selectionStart = el.selectionEnd = el.value.length; }
+    };
+  }
+
+  document.getElementById("toQuiz").onclick = function(){
+    history.replaceState(null, "", location.pathname + location.search);
+    state = fresh();
+    render();
+  };
+
+  document.getElementById("csvBtn").onclick = function(){
+    exportCsv(filtered);
+  };
+
+  document.getElementById("syncBtn").onclick = function(){
+    toast("Запуск синхронизации…");
+    syncPendingLeads().then(function(count){
+      toast("Синхронизировано заявок: " + count);
+      renderAnswers();
+    });
+  };
+
+  app.querySelectorAll(".view-lead-btn").forEach(function(btn){
+    btn.onclick = function(){
+      var id = btn.getAttribute("data-id");
+      showLeadModal(id);
+    };
+  });
+}
+
+function showLeadModal(id){
+  var docs = getLeads();
+  var d = docs.filter(function(x){ return x.id === id; })[0];
+  if(!d) return;
+
+  var html =
+    '<div class="modal-overlay" id="leadOverlay">' +
+      '<div class="modal">' +
+        '<button class="modal-close" id="modalClose">&times;</button>' +
+        '<h2>Карточка лида</h2>' +
+        '<p><b>Имя:</b> ' + esc(d.name) + '</p>' +
+        '<p><b>Телефон:</b> <a href="tel:' + esc(d.phone) + '">' + esc(d.phone) + '</a></p>' +
+        (d.telegram ? '<p><b>Telegram:</b> ' + esc(d.telegram) + '</p>' : '') +
+        (d.maxLogin ? '<p><b>Логин в МАКС:</b> <code>' + esc(d.maxLogin) + '</code></p>' : '') +
+        (d.company ? '<p><b>Компания:</b> ' + esc(d.company) + '</p>' : '') +
+        '<hr style="border:0;border-top:1px solid var(--border);margin:16px 0">' +
+        '<p><b>Сегмент:</b> ' + esc(d.temperatureLabel || TEMP_LABEL[d.temperature]) + '</p>' +
+        '<p><b>Основной продукт:</b> <b style="color:var(--lime);background:var(--bar);padding:2px 8px;border-radius:6px">' + esc(d.mainProduct) + '</b></p>' +
+        '<p><b>Все рекомендации:</b> ' + esc((d.productNames || []).join(", ")) + '</p>' +
+        '<hr style="border:0;border-top:1px solid var(--border);margin:16px 0">' +
+        '<p><b>Индустрия:</b> ' + esc(d.industry || "—") + '</p>' +
+        '<p><b>Где продаёт:</b> ' + esc(d.answersText.channels || "—") + '</p>' +
+        '<p><b>Оборот:</b> ' + esc(d.answersText.turnover || "—") + '</p>' +
+        (d.answersText.site ? '<p><b>Состояние сайта:</b> ' + esc(d.answersText.site) + '</p>' : '') +
+        '<p><b>Боли бизнеса:</b> ' + esc(d.answersText.pains || "—") + '</p>' +
+        '<p><b>Планы на полгода:</b> ' + esc(d.answersText.plans || "—") + '</p>' +
+        '<p><b>Бюджет на маркетинг:</b> ' + esc(d.answersText.budget || "—") + '</p>' +
+        '<p><b>Клиент Альфа-Банка:</b> ' + esc(d.answersText.bank || "—") + '</p>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById("modalSlot").innerHTML = html;
+  document.getElementById("modalClose").onclick = function(){
+    document.getElementById("modalSlot").innerHTML = "";
+  };
+  document.getElementById("leadOverlay").onclick = function(e){
+    if(e.target === this) document.getElementById("modalSlot").innerHTML = "";
+  };
+}
+
+function exportCsv(rows){
+  var head = [
+    "Дата", "Имя", "Телефон", "Telegram", "Логин в МАКС", "Компания",
+    "Сегмент", "Основной продукт", "Все рекомендации",
+    "Индустрия", "Где продаёт", "Оборот", "Сайт", "Боли бизнеса", "Планы", "Бюджет", "Клиент банка"
+  ];
+  function cell(v){
+    v = String(v == null ? "" : v);
+    return /[";\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }
+  var lines = [head.map(cell).join(";")];
+  rows.forEach(function(d){
+    var t = d.answersText || {};
+    lines.push([
+      d.createdDate || "",
+      d.name,
+      d.phone,
+      d.telegram,
+      d.maxLogin || "",
+      d.company,
+      TEMP_LABEL[d.temperature] || "",
+      d.mainProduct,
+      (d.productNames || []).join(", "),
+      d.industry || "",
+      t.channels || "",
+      t.turnover || "",
+      t.site || "",
+      t.pains || "",
+      t.plans || "",
+      t.budget || "",
+      t.bank || ""
+    ].map(cell).join(";"));
+  });
+
+  var blob = new Blob(["\uFEFF" + lines.join("\r\n")], {type: "text/csv;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  var stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = "alfaseller_leads_" + stamp + ".csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  toast("Файл выгружен в Excel / CSV");
+}
+
+/* ========================================================
+   8. SETTINGS MODAL (Google, Yandex, Telegram)
+   ======================================================== */
+document.getElementById("settingsBtn").onclick = function(){
+  var cfg = getSettings();
+  var html =
+    '<div class="modal-overlay" id="settingsOverlay">' +
+      '<div class="modal">' +
+        '<button class="modal-close" id="setClose">&times;</button>' +
+        '<h2>Настройки отправки данных</h2>' +
+        '<div class="settings-group">' +
+          '<label>Google Таблицы (URL вебхука Apps Script):</label>' +
+          '<input type="url" id="s_google" placeholder="https://script.google.com/macros/s/.../exec" value="' + esc(cfg.googleScriptUrl) + '">' +
+          '<div class="help">Лиды будут моментально дописываться новой строкой в вашу Google Таблицу.</div>' +
+        '</div>' +
+        '<div class="settings-group">' +
+          '<label>Яндекс Таблицы / Webhook URL:</label>' +
+          '<input type="url" id="s_yandex" placeholder="https://functions.yandexcloud.net/... или Albato/Make" value="' + esc(cfg.yandexWebhookUrl) + '">' +
+          '<div class="help">URL для отправки в Яндекс Таблицу через Яндекс Функцию или вебхук.</div>' +
+        '</div>' +
+        '<div class="settings-group">' +
+          '<label>Telegram Bot Token:</label>' +
+          '<input type="text" id="s_tg_token" placeholder="123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ" value="' + esc(cfg.telegramBotToken) + '">' +
+        '</div>' +
+        '<div class="settings-group">' +
+          '<label>Telegram Chat ID группы менеджеров:</label>' +
+          '<input type="text" id="s_tg_chat" placeholder="-1001234567890 или @channel" value="' + esc(cfg.telegramChatId) + '">' +
+          '<div class="help">Бот пришлёт красиво оформленную карточку лида прямо в чат стенда.</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">' +
+          '<button type="button" class="btn btn-lime btn-small" id="saveCfgBtn">Сохранить настройки</button>' +
+          '<button type="button" class="btn btn-small btn-outline" id="testTgBtn">Тест Telegram</button>' +
+          '<button type="button" class="btn btn-small btn-outline" id="clearLeadsBtn" style="color:var(--red);margin-left:auto">Очистить лиды</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById("modalSlot").innerHTML = html;
+  
+  document.getElementById("setClose").onclick = function(){
+    document.getElementById("modalSlot").innerHTML = "";
+  };
+  document.getElementById("settingsOverlay").onclick = function(e){
+    if(e.target === this) document.getElementById("modalSlot").innerHTML = "";
+  };
+
+  document.getElementById("saveCfgBtn").onclick = function(){
+    var s = {
+      googleScriptUrl: document.getElementById("s_google").value.trim(),
+      yandexWebhookUrl: document.getElementById("s_yandex").value.trim(),
+      telegramBotToken: document.getElementById("s_tg_token").value.trim(),
+      telegramChatId: document.getElementById("s_tg_chat").value.trim()
+    };
+    saveSettings(s);
+    toast("Настройки сохранены!");
+    document.getElementById("modalSlot").innerHTML = "";
+  };
+
+  document.getElementById("testTgBtn").onclick = function(){
+    var s = {
+      telegramBotToken: document.getElementById("s_tg_token").value.trim(),
+      telegramChatId: document.getElementById("s_tg_chat").value.trim()
+    };
+    if(!s.telegramBotToken || !s.telegramChatId){
+      toast("Укажите Bot Token и Chat ID");
+      return;
+    }
+    toast("Отправка тестового сообщения…");
+    sendToTelegram(s, {
+      name: "Тестовый Посетитель",
+      phone: "+7 (999) 000-00-00",
+      telegram: "@test_user",
+      maxLogin: "test_max_id",
+      company: "Тестовая компания",
+      temperature: "hot",
+      mainProduct: "Альфа-Селлер Профи",
+      productNames: ["Альфа-Селлер Профи", "MarketGuru", "Подели"],
+      answersText: {
+        industry: "Одежда и обувь",
+        channels: "Маркетплейсы, Соцсети",
+        turnover: "1–5 млн ₽",
+        budget: "150 000 – 500 000 ₽",
+        bank: "Да, расчётный счёт"
+      }
+    }).then(function(ok){
+      toast(ok ? "✓ Сообщение успешно пришло в Telegram!" : "Ошибка отправки в Telegram. Проверьте токен и чат ID");
+    });
+  };
+
+  document.getElementById("clearLeadsBtn").onclick = function(){
+    if(confirm("Вы уверены, что хотите удалить все сохранённые лиды с этого планшета?")){
+      saveLeads([]);
+      toast("Лиды очищены");
+      document.getElementById("modalSlot").innerHTML = "";
+      if(state.screen === "answers") renderAnswers();
+    }
+  };
+};
+
+/* ========================================================
+   9. KIOSK IDLE TIMEOUT & SECRET GESTURE
+   ======================================================== */
+function armIdle(){
+  clearTimeout(idleTimer);
+  // On questions or contacts screen, reset if left untouched for 2 minutes
+  if(state.screen === "q" || state.screen === "contacts"){
+    idleTimer = setTimeout(function(){
+      state = fresh();
+      render();
+    }, 120000);
+  }
+}
+["pointerdown","keydown"].forEach(function(ev){
+  document.addEventListener(ev, armIdle, {passive:true});
+});
+
+// Secret 5 taps on the top logo opens the Admin panel on iPad
+document.getElementById("brandLogo").onclick = function(){
+  logoTapCount++;
+  clearTimeout(logoTapTimer);
+  logoTapTimer = setTimeout(function(){ logoTapCount = 0; }, 2000);
+  if(logoTapCount >= 5){
+    logoTapCount = 0;
+    location.hash = "#answers";
+  }
+};
+
+/* ========================================================
+   10. ROUTING & SYNC ON LOAD
+   ======================================================== */
+function route(){
+  if(location.hash === "#answers"){
+    state.screen = "answers";
+  } else if(state.screen === "answers"){
+    state = fresh();
+  }
+  render();
+}
+window.addEventListener("hashchange", route);
+window.addEventListener("online", function(){
+  syncPendingLeads();
+});
+
+route();
+syncPendingLeads();
+
+})();
+</script>
+</body>
+</html>
