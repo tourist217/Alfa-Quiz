@@ -373,9 +373,6 @@ td .small{color:var(--muted);font-size:13.5px;margin-top:2px}
       </div>
       <div class="top-actions">
         <div class="pill" id="pill"><span class="badge-ekom">E-KOM</span> <span>Подбор продуктов</span></div>
-        <button class="icon-btn" id="settingsBtn" title="Настройки интеграций" aria-label="Настройки">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        </button>
       </div>
     </header>
     <main id="app"></main>
@@ -579,16 +576,19 @@ var QUESTIONS = [
 var SETTINGS_KEY = "as_quiz_settings";
 var LEADS_KEY = "as_quiz_leads_v2";
 
+var DEFAULT_CONFIG = {
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbwNXuuYNHJqmnL42Ntdis5-InQnQYB3U01jexv9_W3tmxBXWaGAn_SkW23JAL398t9q/exec",
+  yandexWebhookUrl: "",
+  telegramBotToken: "",
+  telegramChatId: ""
+};
+
 function getSettings(){
   try {
-    return Object.assign({
-      googleScriptUrl: "",
-      yandexWebhookUrl: "",
-      telegramBotToken: "",
-      telegramChatId: ""
-    }, JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"));
+    var custom = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+    return Object.assign({}, DEFAULT_CONFIG, custom);
   } catch(e){
-    return {googleScriptUrl:"", yandexWebhookUrl:"", telegramBotToken:"", telegramChatId:""};
+    return Object.assign({}, DEFAULT_CONFIG);
   }
 }
 function saveSettings(s){
@@ -835,9 +835,9 @@ function sendToWebhook(url, doc){
   if(!url || !url.trim()) return Promise.resolve(false);
   return fetch(url.trim(), {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "text/plain;charset=utf-8"},
     body: JSON.stringify(doc),
-    mode: "no-cors" // Supports Google Apps Script redirects without CORS failure
+    mode: "no-cors"
   }).then(function(){ return true; }).catch(function(){ return false; });
 }
 
@@ -1265,10 +1265,6 @@ function renderResult(){
         '<div>' +
           '<p>Менеджер Альфа Селлер свяжется с вами или вы можете прямо сейчас подойти к экспертам на стенде и обсудить подборку.</p>' +
           '<div class="meta">' +
-            '<span id="saveMeta">' +
-              (state.saveStatus === "sent" ? '<span class="status-pill ok">✓ Данные успешно отправлены</span>' :
-               state.saveStatus === "saving" ? 'Отправка данных…' : '<span class="status-pill offline">💾 Сохранено на устройстве</span>') +
-            '</span>' +
             '<span id="countdown"></span>' +
           '</div>' +
         '</div>' +
@@ -1506,7 +1502,8 @@ function exportCsv(rows){
 /* ========================================================
    8. SETTINGS MODAL (Google, Yandex, Telegram)
    ======================================================== */
-document.getElementById("settingsBtn").onclick = function(){
+var setBtn = document.getElementById("settingsBtn");
+if(setBtn) setBtn.onclick = function(){
   var cfg = getSettings();
   var html =
     '<div class="modal-overlay" id="settingsOverlay">' +
