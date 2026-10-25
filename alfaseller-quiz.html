@@ -587,9 +587,8 @@ function getSettings(){
   try {
     var custom = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
     var res = Object.assign({}, DEFAULT_CONFIG, custom);
-    if (!res.googleScriptUrl || res.googleScriptUrl.indexOf("AKfycbwNXuu") !== -1) {
-      res.googleScriptUrl = DEFAULT_CONFIG.googleScriptUrl;
-    }
+    // Принудительно используем боевую проверенную ссылку на Google Apps Script
+    res.googleScriptUrl = DEFAULT_CONFIG.googleScriptUrl;
     return res;
   } catch(e){
     return Object.assign({}, DEFAULT_CONFIG);
@@ -1184,6 +1183,7 @@ function submit(){
     id: newId(),
     createdAt: now.getTime(),
     createdDate: now.toLocaleString("ru-RU", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}),
+    timestamp: now.toLocaleString("ru-RU", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}),
     name: c.name.trim(),
     phone: fmtPhone(c.phone),
     telegram: c.telegram.trim(),
@@ -1192,9 +1192,12 @@ function submit(){
     consent: true,
     temperature: temp,
     temperatureLabel: TEMP_LABEL[temp],
+    leadType: TEMP_LABEL[temp],
     mainProduct: PRODUCTS[recs[0].id].name,
+    primaryProduct: PRODUCTS[recs[0].id].name,
     productIds: recs.map(function(r){ return r.id; }),
     productNames: recs.map(function(r){ return PRODUCTS[r.id].name; }),
+    recommendedProducts: recs.map(function(r){ return PRODUCTS[r.id].name; }),
     recommendationReasons: recs[0].reasons,
     industry: labelOf("industry", a.industry),
     channels: labelsOf("channels", a.channels),
