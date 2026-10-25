@@ -75,6 +75,11 @@ button,input,select,textarea{font:inherit;color:inherit}
   padding:clamp(18px,3.2vw,38px);
   box-shadow:0 12px 40px rgba(0,0,0,0.04);
 }
+#app{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
 .top{
   display:flex;align-items:center;justify-content:space-between;
   gap:12px;margin-bottom:clamp(16px,2.6vw,26px);user-select:none;
@@ -134,22 +139,23 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 /* Start / Hero */
 .hero{
-  flex:1;display:flex;flex-direction:column;
+  flex:1;display:flex;flex-direction:column;justify-content:space-between;
   background:var(--lime);color:var(--on-lime);
   border-radius:28px;overflow:hidden;position:relative;
+  min-height:clamp(440px, 60vh, 720px);
 }
 .hero-body{
-  flex:1;padding:clamp(26px,4.5vw,56px);
-  display:flex;flex-direction:column;justify-content:center;gap:26px;
+  flex:1;padding:clamp(28px,4.5vw,56px);
+  display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,2.5vw,32px);
   position:relative;z-index:1;
 }
 .hero h1{
-  margin:0;font-size:clamp(36px,5.8vw,70px);line-height:1.04;
-  font-weight:800;letter-spacing:-0.035em;max-width:18ch;
+  margin:0;font-size:clamp(36px,5.4vw,70px);line-height:1.04;
+  font-weight:800;letter-spacing:-0.035em;max-width:16ch;
 }
 .hero-facts{
   list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
-  gap:12px 28px;font-size: clamp(17px,2vw,20px);font-weight:700;
+  gap:12px 24px;font-size: clamp(16px,1.9vw,20px);font-weight:700;
 }
 .hero-facts li{display:flex;align-items:center;gap:10px}
 .hero-tag{
@@ -165,7 +171,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   position:relative;z-index:1;
   display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
   background:var(--bar);color:var(--on-bar);
-  margin:0 clamp(14px,2.2vw,24px) clamp(14px,2.2vw,24px);
+  margin:0 clamp(14px,2.2vw,24px) clamp(16px,2.4vw,28px);
   border-radius:999px;padding:12px 12px 12px clamp(20px,3vw,32px);
 }
 .hero-bar p{margin:0;font-size:clamp(16px,1.8vw,18px);font-weight:500;max-width:54ch}
