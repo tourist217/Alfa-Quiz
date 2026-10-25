@@ -577,7 +577,7 @@ var SETTINGS_KEY = "as_quiz_settings";
 var LEADS_KEY = "as_quiz_leads_v2";
 
 var DEFAULT_CONFIG = {
-  googleScriptUrl: "https://script.google.com/macros/s/AKfycbwNXuuYNHJqmnL42Ntdis5-InQnQYB3U01jexv9_W3tmxBXWaGAn_SkW23JAL398t9q/exec",
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbwCyKGwXBP2wnp5nKoFmPyvnI1ICdFfwXxnNsVcCP9n1YFDZx9_zpFxbrQWvdxu2Yf1/exec",
   yandexWebhookUrl: "",
   telegramBotToken: "",
   telegramChatId: ""
@@ -586,7 +586,11 @@ var DEFAULT_CONFIG = {
 function getSettings(){
   try {
     var custom = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-    return Object.assign({}, DEFAULT_CONFIG, custom);
+    var res = Object.assign({}, DEFAULT_CONFIG, custom);
+    if (!res.googleScriptUrl || res.googleScriptUrl.indexOf("AKfycbwNXuu") !== -1) {
+      res.googleScriptUrl = DEFAULT_CONFIG.googleScriptUrl;
+    }
+    return res;
   } catch(e){
     return Object.assign({}, DEFAULT_CONFIG);
   }
