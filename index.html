@@ -852,7 +852,11 @@ function dispatchLead(doc){
     promises.push(sendToTelegram(settings, doc));
   }
   if(settings.googleScriptUrl){
-    promises.push(sendToWebhook(settings.googleScriptUrl, doc));
+    var gDoc = Object.assign({}, doc);
+    if(gDoc.phone && gDoc.phone.charAt(0) === '+'){
+      gDoc.phone = "'" + gDoc.phone;
+    }
+    promises.push(sendToWebhook(settings.googleScriptUrl, gDoc));
   }
   if(settings.yandexWebhookUrl){
     promises.push(sendToWebhook(settings.yandexWebhookUrl, doc));
