@@ -144,8 +144,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   position:relative;z-index:1;
 }
 .hero h1{
-  margin:0;font-size:clamp(36px,5.8vw,72px);line-height:1.02;
-  font-weight:800;letter-spacing:-0.035em;max-width:14ch;
+  margin:0;font-size:clamp(36px,5.8vw,70px);line-height:1.04;
+  font-weight:800;letter-spacing:-0.035em;max-width:18ch;
 }
 .hero-facts{
   list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
@@ -155,12 +155,11 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero-tag{
   display:inline-flex;align-items:center;background:var(--bar);color:var(--on-bar);
   font-weight:800;font-size:13px;padding:6px 16px;border-radius:999px;
-  letter-spacing:0.04em;align-self:flex-start;margin-bottom:-10px;
+  letter-spacing:0.04em;align-self:flex-start;margin-bottom:-6px;
 }
 .hero-shape{
-  position:absolute;right:-4%;top:-10%;width:min(55%,500px);
-  aspect-ratio:1;z-index:0;pointer-events:none;object-fit:cover;
-  border-radius:28px;mix-blend-mode:multiply;opacity:0.92;
+  position:absolute;right:-8%;top:-12%;width:min(58%,520px);
+  aspect-ratio:1;z-index:0;pointer-events:none;
 }
 .hero-bar{
   position:relative;z-index:1;
@@ -933,7 +932,16 @@ function renderStart(){
   app.innerHTML =
     '<section class="screen">' +
       '<div class="hero">' +
-        '<img src="hero_ribbon.jpg" class="hero-shape" alt="" aria-hidden="true">' +
+        '<svg class="hero-shape" viewBox="0 0 400 400" aria-hidden="true">' +
+          '<defs>' +
+            '<radialGradient id="softGlow" cx="60%" cy="38%" r="55%">' +
+              '<stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28" />' +
+              '<stop offset="50%" stop-color="#DEFF5C" stop-opacity="0.14" />' +
+              '<stop offset="100%" stop-color="#B6F800" stop-opacity="0" />' +
+            '</radialGradient>' +
+          '</defs>' +
+          '<circle cx="240" cy="160" r="180" fill="url(#softGlow)" />' +
+        '</svg>' +
         '<div class="hero-body">' +
           '<div class="hero-tag">ЭКОСИСТЕМА АЛЬФА-БАНКА</div>' +
           '<h1 class="sr-heading" tabindex="-1" data-focus>Подберём продукты е-ком для вашего бизнеса</h1>' +
