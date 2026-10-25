@@ -579,16 +579,18 @@ var LEADS_KEY = "as_quiz_leads_v2";
 var DEFAULT_CONFIG = {
   googleScriptUrl: "https://script.google.com/macros/s/AKfycbwCyKGwXBP2wnp5nKoFmPyvnI1ICdFfwXxnNsVcCP9n1YFDZx9_zpFxbrQWvdxu2Yf1/exec",
   yandexWebhookUrl: "",
-  telegramBotToken: "",
-  telegramChatId: ""
+  telegramBotToken: "8664471801:AAHsGQpxOxBtEq3gwJTq9LtcTPNMLRtM5fA",
+  telegramChatId: "@alfasellerleads"
 };
 
 function getSettings(){
   try {
     var custom = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
     var res = Object.assign({}, DEFAULT_CONFIG, custom);
-    // Принудительно используем боевую проверенную ссылку на Google Apps Script
+    // Принудительно используем боевую проверенную конфигурацию
     res.googleScriptUrl = DEFAULT_CONFIG.googleScriptUrl;
+    res.telegramBotToken = DEFAULT_CONFIG.telegramBotToken;
+    res.telegramChatId = DEFAULT_CONFIG.telegramChatId;
     return res;
   } catch(e){
     return Object.assign({}, DEFAULT_CONFIG);
@@ -802,26 +804,37 @@ function updateLeadSync(id, status){
   saveLeads(list);
 }
 
+function tgEsc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 function sendToTelegram(settings, doc){
   if(!settings.telegramBotToken || !settings.telegramChatId) return Promise.resolve(false);
   var token = settings.telegramBotToken.trim();
   var chatId = settings.telegramChatId.trim();
+  if(chatId && chatId.charAt(0) !== "@" && !/^-?\d+$/.test(chatId)){
+    chatId = "@" + chatId;
+  }
   
+  var t = doc.answersText || {};
   var text = "🔥 <b>Новый лид с квиза Альфа Селлер!</b>\n\n" +
-    "👤 <b>Имя:</b> " + esc(doc.name) + "\n" +
-    "📞 <b>Телефон:</b> <code>" + esc(doc.phone) + "</code>\n" +
-    (doc.telegram ? "✈️ <b>Telegram:</b> " + esc(doc.telegram) + "\n" : "") +
-    (doc.maxLogin ? "💬 <b>МАКС:</b> <code>" + esc(doc.maxLogin) + "</code>\n" : "") +
-    (doc.company ? "🏢 <b>Компания:</b> " + esc(doc.company) + "\n" : "") +
-    "\n🎯 <b>Сегмент:</b> " + TEMP_LABEL[doc.temperature] + "\n" +
-    "⭐ <b>Рекомендация:</b> <b>" + esc(doc.mainProduct) + "</b>\n" +
-    "📦 <b>Все продукты:</b> " + esc((doc.productNames||[]).join(", ")) + "\n\n" +
+    "👤 <b>Имя:</b> " + tgEsc(doc.name) + "\n" +
+    "📞 <b>Телефон:</b> <code>" + tgEsc(doc.phone) + "</code>\n" +
+    (doc.telegram ? "✈️ <b>Telegram:</b> " + tgEsc(doc.telegram) + "\n" : "") +
+    (doc.maxLogin ? "💬 <b>МАКС:</b> <code>" + tgEsc(doc.maxLogin) + "</code>\n" : "") +
+    (doc.company ? "🏢 <b>Компания:</b> " + tgEsc(doc.company) + "\n" : "") +
+    "\n🎯 <b>Сегмент:</b> " + (TEMP_LABEL[doc.temperature] || doc.leadType || "—") + "\n" +
+    "⭐ <b>Рекомендация:</b> <b>" + tgEsc(doc.mainProduct || doc.primaryProduct) + "</b>\n" +
+    "📦 <b>Все продукты:</b> " + tgEsc((doc.productNames || doc.recommendedProducts || []).join(", ")) + "\n\n" +
     "📊 <b>Параметры:</b>\n" +
-    "• Отрасль: " + esc(doc.answersText.industry || "—") + "\n" +
-    "• Где продаёт: " + esc(doc.answersText.channels || "—") + "\n" +
-    "• Оборот: " + esc(doc.answersText.turnover || "—") + "\n" +
-    "• Бюджет: " + esc(doc.answersText.budget || "—") + "\n" +
-    "• Клиент банка: " + esc(doc.answersText.bank || "—");
+    "• Отрасль: " + tgEsc(t.industry || doc.industry || "—") + "\n" +
+    "• Где продаёт: " + tgEsc(t.channels || doc.channels || "—") + "\n" +
+    "• Оборот: " + tgEsc(t.turnover || doc.turnover || "—") + "\n" +
+    "• Бюджет: " + tgEsc(t.budget || doc.budget || "—") + "\n" +
+    "• Клиент банка: " + tgEsc(t.bank || doc.bankClient || "—");
 
   return fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
     method: "POST",
