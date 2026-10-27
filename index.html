@@ -929,7 +929,6 @@ function syncPendingLeads(){
 var app = document.getElementById("app");
 var state = fresh();
 var idleTimer = null, countdownTimer = null;
-var logoTapCount = 0, logoTapTimer = null;
 
 function fresh(){
   return {
@@ -1658,16 +1657,7 @@ function armIdle(){
   document.addEventListener(ev, armIdle, {passive:true});
 });
 
-// Secret 5 taps on the top logo opens the Admin panel on iPad
-document.getElementById("brandLogo").onclick = function(){
-  logoTapCount++;
-  clearTimeout(logoTapTimer);
-  logoTapTimer = setTimeout(function(){ logoTapCount = 0; }, 2000);
-  if(logoTapCount >= 5){
-    logoTapCount = 0;
-    location.hash = "#answers";
-  }
-};
+
 
 /* ========================================================
    10. ROUTING & SYNC ON LOAD
