@@ -107,8 +107,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 }
 .icon-btn:hover{color:var(--text);background:var(--panel)}
 .tick{
-  display:inline-block;width:13px;height:12px;
-  background:var(--red);transform:skewX(-20deg);border-radius:1px;flex:none;
+  display:inline-block;width:9px;height:9px;
+  background:var(--red);border-radius:50%;flex:none;
 }
 .screen{flex:1;display:flex;flex-direction:column;animation:enter .18s cubic-bezier(0.16, 1, 0.3, 1)}
 @keyframes enter{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -462,30 +462,30 @@ var QUESTIONS = [
     type: "multi",
     exclusive: ["none"],
     options: [
-      ["mp", "Маркетплейсы (Wildberries, Ozon, Яндекс Маркет)"],
-      ["site", "Свой интернет-магазин или сайт"],
-      ["social", "Соцсети и мессенджеры (Telegram, VK)"],
-      ["offline", "Офлайн-магазины / торговые точки"],
-      ["none", "Пока не продаю (только планирую старт)"]
+      ["mp", "Wildberries / Ozon / другие маркетплейсы"],
+      ["site", "Свой сайт или интернет-магазин"],
+      ["social", "Соцсети и мессенджеры"],
+      ["offline", "Офлайн-точка"],
+      ["none", "Пока не продаю, планирую"]
     ]
   },
   {
     id: "industry",
     title: "В какой сфере ваш бизнес?",
-    hint: "Выберите основное направление",
+    hint: "Один вариант",
     type: "single",
     options: [
-      ["fashion", "Одежда, обувь, аксессуары"],
       ["home", "Товары для дома, мебель, ремонт"],
       ["beauty_fmcg", "Красота, здоровье, косметика, FMCG"],
+      ["pets", "Товары для животных"],
       ["electronics", "Электроника, техника, автотовары"],
       ["food_resto", "Общепит, кафе, доставка еды"],
-      ["other", "Другие товары или B2B"]
+      ["other", "Другие товары или b2b"]
     ]
   },
   {
     id: "turnover",
-    title: "Какой у вас ежемесячный оборот?",
+    title: "Какой у вас оборот в месяц?",
     hint: "Один вариант",
     type: "single",
     when: function(a){ return !onlyNone(a); },
@@ -498,51 +498,48 @@ var QUESTIONS = [
   },
   {
     id: "site",
-    title: "Что сейчас с вашим сайтом?",
+    title: "Если есть сайт: что с ним сейчас?",
     hint: "Можно выбрать несколько вариантов",
     type: "multi",
     exclusive: ["ok"],
     when: function(a){ return has(a.channels, "site"); },
     options: [
       ["ok", "Всё устраивает"],
-      ["conv", "Трафик есть, но покупают мало (низкая конверсия)"],
-      ["repeat", "Мало повторных покупок"],
-      ["slow", "Тормозит на акциях, доработки долгие и дорогие"],
-      ["integr", "Нужны интеграции: 1С, МойСклад, CRM"]
+      ["conv", "Посетители есть, но низкая конверсия в покупку"],
+      ["repeat", "Низкий процент повторных покупок"],
+      ["slow", "Падает скорость на акциях, доработки долгие и дорогие"],
+      ["integr", "Нужны интеграции (1С, МойСклад, CRM)"]
     ]
   },
   {
     id: "pains",
-    title: "Что сейчас больше всего мешает расти?",
+    title: "Что сейчас сдерживает рост?",
     hint: "Выберите до двух вариантов",
     type: "multi",
     max: 2,
     options: [
-      ["mp_down", "Продажи на маркетплейсах падают или не приносят прибыль"],
-      ["ads_bad", "Реклама не окупается / сливается бюджет"],
-      ["few_buyers", "Не хватает новых покупателей и трафика"],
-      ["bloggers_fail", "Реклама у блогеров не сработала или сложно выбрать"],
-      ["chaos", "Продажи в разных каналах разрозненны, нет единого учёта"],
-      ["no_team", "Нет своих разработчиков или маркетолога"],
-      ["profit", "Непонятно, какие товары реально дают прибыль"]
+      ["mp_down", "Падение продаж или низкая маржинальность на маркетплейсах"],
+      ["ads_bad", "Реклама не окупается (низкий ROMI)"],
+      ["few_buyers", "Мало новых клиентов"],
+      ["profit", "Нет понимания, какие товары приносят основную прибыль"],
+      ["chaos", "Данные и заказы из разных каналов не связаны"],
+      ["no_team", "Нет штатного IT-специалиста или маркетолога"],
+      ["bloggers_fail", "Неудачный опыт работы с блогерами"]
     ]
   },
   {
     id: "plans",
     title: "Что планируете запустить в ближайшие полгода?",
-    hint: "Можно выбрать до трёх вариантов",
+    hint: "Можно выбрать несколько вариантов",
     type: "multi",
-    max: 3,
-    exclusive: ["nothing"],
     options: [
       ["shop", "Свой интернет-магазин"],
-      ["app", "Мобильное приложение для клиентов"],
-      ["mp_enter", "Выход на WB или Ozon"],
-      ["ads", "Рекламу в Яндексе, VK, Авито, Telegram"],
+      ["app", "Мобильное приложение"],
+      ["loyalty", "Программу лояльности"],
+      ["mp_enter", "Выход на WB / Ozon"],
+      ["ads", "Рекламу в Директе, VK, Авито"],
       ["bloggers", "Рекламу у блогеров"],
-      ["loyalty", "Программу лояльности или CRM"],
-      ["bnpl", "Оплату частями для покупателей (BNPL)"],
-      ["nothing", "Пока ничего конкретного"]
+      ["bnpl", "Рассрочку для покупателей"]
     ]
   },
   {
@@ -551,10 +548,21 @@ var QUESTIONS = [
     hint: "Один вариант",
     type: "single",
     options: [
-      ["b1", "До 50 000 ₽"],
-      ["b2", "50 000 – 150 000 ₽"],
-      ["b3", "150 000 – 500 000 ₽"],
-      ["b4", "Больше 500 000 ₽"]
+      ["b1", "До 50 тыс. ₽"],
+      ["b2", "50–150 тыс. ₽"],
+      ["b3", "150–500 тыс. ₽"],
+      ["b4", "Больше 500 тыс. ₽"]
+    ]
+  },
+  {
+    id: "team",
+    title: "Кто у вас занимается сайтом и рекламой?",
+    hint: "Один вариант",
+    type: "single",
+    options: [
+      ["self", "Сам"],
+      ["marketer", "Есть маркетолог"],
+      ["agency", "Есть команда или агентство"]
     ]
   },
   {
@@ -563,9 +571,9 @@ var QUESTIONS = [
     hint: "Один вариант",
     type: "single",
     options: [
-      ["rko", "Да, открыт расчётный счёт"],
-      ["rko_acq", "Да, счёт и торговый эквайринг"],
-      ["no", "Пока нет"]
+      ["rko", "Да, расчётный счёт"],
+      ["rko_acq", "Да, счёт и эквайринг"],
+      ["no", "Нет"]
     ]
   }
 ];
@@ -724,10 +732,10 @@ function recommend(a){
   }
 
   // 5. WhoIsBlogger (WIB)
-  if(B >= 3 || ind === "fashion" || ind === "beauty_fmcg"){
+  if(B >= 3 || ind === "beauty_fmcg" || ind === "pets" || ind === "home"){
     if(has(plans,"bloggers")) add("wib", 4, "Подберёт блогеров по реальным покупкам аудитории");
     if(has(pains,"bloggers_fail")) add("wib", 4, "Анализ конкурентов и замер BrandLift / SalesLift");
-    if((ind === "fashion" || ind === "beauty_fmcg") && B >= 2) add("wib", 1, "Эффективный канал для ниши моды и красоты");
+    if((ind === "beauty_fmcg" || ind === "pets" || ind === "home") && B >= 2) add("wib", 1, "Эффективный канал для ниши красоты, товаров для дома и животных");
   }
 
   // 6. Flocktory MARTECH
@@ -743,17 +751,18 @@ function recommend(a){
   }
 
   // 8. Альфа-Реклама
-  if(B >= 2){
+  if(B >= 2 || a.team === "self" || has(plans,"ads")){
     var w = B >= 3 ? 0 : -1;
     if(has(pains,"few_buyers")) add("ads", 3+w, "Приведём покупателей из Яндекса, VK, Авито и Telegram");
     if(has(plans,"ads")) add("ads", 4+w, "Один кабинет для всех площадок и кэшбэк до 15%");
     if(has(pains,"ads_bad") && !has(ch,"mp")) add("ads", 3+w, "Проверим и оптимизируем текущие рекламные кампании");
+    if(a.team === "self") add("ads", 2, "Запуск рекламы под ключ без лишней рутины");
     if(res.ads && (has(pains,"no_team") || B === 2)) add("ads", 2, "Поможем на старте и настроим всё под ключ");
   }
 
   // 9. Сервис «Подели» (BNPL)
   if(has(plans,"bnpl")) add("podeli", 4, "Покупатели платят долями, магазин получает 100% на следующий день");
-  if(ind === "fashion" || ind === "beauty_fmcg" || ind === "home") add("podeli", 1, "Увеличивает средний чек и выкуп в ритейле");
+  if(ind === "beauty_fmcg" || ind === "pets" || ind === "home") add("podeli", 1, "Увеличивает средний чек и выкуп в ритейле");
 
   // 10. РКО и эквайринг
   if(a.bank === "no") add("rko", 3, "Бизнес-счёт от 0 ₽ навсегда, эквайринг и бесплатная бухгалтерия");
@@ -820,11 +829,11 @@ function sendToTelegram(settings, doc){
   }
   
   var t = doc.answersText || {};
+  var msgr = doc.messenger || doc.telegram || doc.maxLogin;
   var text = "🔥 <b>Новый лид с квиза Альфа Селлер!</b>\n\n" +
     "👤 <b>Имя:</b> " + tgEsc(doc.name) + "\n" +
     "📞 <b>Телефон:</b> <code>" + tgEsc(doc.phone) + "</code>\n" +
-    (doc.telegram ? "✈️ <b>Telegram:</b> " + tgEsc(doc.telegram) + "\n" : "") +
-    (doc.maxLogin ? "💬 <b>МАКС:</b> <code>" + tgEsc(doc.maxLogin) + "</code>\n" : "") +
+    (msgr ? "💬 <b>Telegram / МАКС:</b> <code>" + tgEsc(msgr) + "</code>\n" : "") +
     (doc.company ? "🏢 <b>Компания:</b> " + tgEsc(doc.company) + "\n" : "") +
     "\n🎯 <b>Сегмент:</b> " + (TEMP_LABEL[doc.temperature] || doc.leadType || "—") + "\n" +
     "⭐ <b>Рекомендация:</b> <b>" + tgEsc(doc.mainProduct || doc.primaryProduct) + "</b>\n" +
@@ -833,7 +842,11 @@ function sendToTelegram(settings, doc){
     "• Отрасль: " + tgEsc(t.industry || doc.industry || "—") + "\n" +
     "• Где продаёт: " + tgEsc(t.channels || doc.channels || "—") + "\n" +
     "• Оборот: " + tgEsc(t.turnover || doc.turnover || "—") + "\n" +
+    (t.site || doc.siteState ? "• Сайт: " + tgEsc(t.site || doc.siteState) + "\n" : "") +
+    (t.pains || doc.pains ? "• Сдерживает рост: " + tgEsc(t.pains || doc.pains) + "\n" : "") +
+    (t.plans || doc.plans ? "• Планы: " + tgEsc(t.plans || doc.plans) + "\n" : "") +
     "• Бюджет: " + tgEsc(t.budget || doc.budget || "—") + "\n" +
+    (t.team || doc.team ? "• Кто ведёт: " + tgEsc(t.team || doc.team) + "\n" : "") +
     "• Клиент банка: " + tgEsc(t.bank || doc.bankClient || "—");
 
   return fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
@@ -923,7 +936,7 @@ function fresh(){
     screen: "start",
     qi: 0,
     answers: {},
-    contact: { name: "", phone: "", telegram: "", maxLogin: "", company: "", consent: false },
+    contact: { name: "", phone: "", messenger: "", company: "", consent: false },
     result: null,
     saveStatus: null,
     errors: {}
@@ -969,8 +982,8 @@ function renderStart(){
           '<circle cx="240" cy="160" r="180" fill="url(#softGlow)" />' +
         '</svg>' +
         '<div class="hero-body">' +
-          '<div class="hero-tag">ЭКОСИСТЕМА АЛЬФА-БАНКА</div>' +
-          '<h1 class="sr-heading" tabindex="-1" data-focus>Подберём продукты е-ком для вашего бизнеса</h1>' +
+          '<div class="hero-tag">ПЛАТФОРМА АЛЬФА-БАНКА</div>' +
+          '<h1 class="sr-heading" tabindex="-1" data-focus>Подберём e-commerce инструменты для вашего бизнеса</h1>' +
           '<ul class="hero-facts">' +
             '<li><span class="tick"></span>8 точных вопросов</li>' +
             '<li><span class="tick"></span>Около 2 минут</li>' +
@@ -978,7 +991,7 @@ function renderStart(){
           '</ul>' +
         '</div>' +
         '<div class="hero-bar">' +
-          '<p>Свой интернет-магазин, мобильное приложение, аналитика маркетплейсов, реклама и конверсия</p>' +
+          '<p>Свой интернет-магазин, мобильное приложение, аналитика продаж на маркетплейсах, рекламные возможности, логистика и финтех-сервисы</p>' +
           '<button class="btn btn-lime" id="startBtn">Пройти квиз</button>' +
         '</div>' +
       '</div>' +
@@ -1096,8 +1109,7 @@ function renderContacts(){
       '<form class="form" id="cform" novalidate>' +
         field("name", "Имя и фамилия", "*", c.name, "text", "name", e.name, "Иван Петров") +
         field("phone", "Номер телефона", "*", c.phone, "tel", "tel", e.phone, "+7 (999) 000-00-00") +
-        field("telegram", "Telegram", " (логин)", c.telegram, "text", "off", null, "@username") +
-        field("maxLogin", "Логин в МАКС", " (мессенджер)", c.maxLogin, "text", "off", null, "ваш логин в МАКС") +
+        field("messenger", "Telegram или МАКС", " (логин / ник)", c.messenger || c.telegram || c.maxLogin || "", "text", "off", null, "@username или ник в МАКС") +
         field("company", "Название компании / бренда", " (необязательно)", c.company, "text", "organization", null, "ООО или бренд") +
         '<label class="consent">' +
           '<input type="checkbox" id="consent"' + (c.consent ? " checked" : "") + '>' +
@@ -1111,7 +1123,7 @@ function renderContacts(){
       '</div>' +
     '</section>';
 
-  ["name","telegram","maxLogin","company"].forEach(function(k){
+  ["name","messenger","company"].forEach(function(k){
     var el = document.getElementById("f-" + k);
     if(el) el.oninput = function(){ state.contact[k] = el.value; };
   });
@@ -1191,6 +1203,7 @@ function submit(){
   var recs = recommend(a);
   var temp = temperature(a);
   var now = new Date();
+  var msgr = (c.messenger || c.telegram || c.maxLogin || "").trim();
 
   var doc = {
     id: newId(),
@@ -1199,8 +1212,9 @@ function submit(){
     timestamp: now.toLocaleString("ru-RU", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}),
     name: c.name.trim(),
     phone: fmtPhone(c.phone),
-    telegram: c.telegram.trim(),
-    maxLogin: c.maxLogin.trim(),
+    messenger: msgr,
+    telegram: msgr,
+    maxLogin: msgr,
     company: c.company.trim(),
     consent: true,
     temperature: temp,
@@ -1219,6 +1233,7 @@ function submit(){
     pains: labelsOf("pains", a.pains),
     plans: labelsOf("plans", a.plans),
     budget: labelsOf("budget", a.budget),
+    team: labelOf("team", a.team),
     bankClient: labelsOf("bank", a.bank),
     answersText: {
       industry: labelOf("industry", a.industry),
@@ -1228,6 +1243,7 @@ function submit(){
       pains: labelsOf("pains", a.pains),
       plans: labelsOf("plans", a.plans),
       budget: labelsOf("budget", a.budget),
+      team: labelOf("team", a.team),
       bank: labelsOf("bank", a.bank)
     },
     synced: false
@@ -1448,8 +1464,9 @@ function showLeadModal(id){
         '<h2>Карточка лида</h2>' +
         '<p><b>Имя:</b> ' + esc(d.name) + '</p>' +
         '<p><b>Телефон:</b> <a href="tel:' + esc(d.phone) + '">' + esc(d.phone) + '</a></p>' +
-        (d.telegram ? '<p><b>Telegram:</b> ' + esc(d.telegram) + '</p>' : '') +
-        (d.maxLogin ? '<p><b>Логин в МАКС:</b> <code>' + esc(d.maxLogin) + '</code></p>' : '') +
+        (d.messenger ? '<p><b>Telegram / МАКС:</b> ' + esc(d.messenger) + '</p>' :
+          ((d.telegram ? '<p><b>Telegram:</b> ' + esc(d.telegram) + '</p>' : '') +
+           (d.maxLogin ? '<p><b>Логин в МАКС:</b> <code>' + esc(d.maxLogin) + '</code></p>' : ''))) +
         (d.company ? '<p><b>Компания:</b> ' + esc(d.company) + '</p>' : '') +
         '<hr style="border:0;border-top:1px solid var(--border);margin:16px 0">' +
         '<p><b>Сегмент:</b> ' + esc(d.temperatureLabel || TEMP_LABEL[d.temperature]) + '</p>' +
@@ -1460,9 +1477,10 @@ function showLeadModal(id){
         '<p><b>Где продаёт:</b> ' + esc(d.answersText.channels || "—") + '</p>' +
         '<p><b>Оборот:</b> ' + esc(d.answersText.turnover || "—") + '</p>' +
         (d.answersText.site ? '<p><b>Состояние сайта:</b> ' + esc(d.answersText.site) + '</p>' : '') +
-        '<p><b>Боли бизнеса:</b> ' + esc(d.answersText.pains || "—") + '</p>' +
+        '<p><b>Сдерживает рост:</b> ' + esc(d.answersText.pains || "—") + '</p>' +
         '<p><b>Планы на полгода:</b> ' + esc(d.answersText.plans || "—") + '</p>' +
         '<p><b>Бюджет на маркетинг:</b> ' + esc(d.answersText.budget || "—") + '</p>' +
+        (d.answersText.team ? '<p><b>Кто ведёт сайт/рекламу:</b> ' + esc(d.answersText.team) + '</p>' : '') +
         '<p><b>Клиент Альфа-Банка:</b> ' + esc(d.answersText.bank || "—") + '</p>' +
       '</div>' +
     '</div>';
@@ -1478,9 +1496,9 @@ function showLeadModal(id){
 
 function exportCsv(rows){
   var head = [
-    "Дата", "Имя", "Телефон", "Telegram", "Логин в МАКС", "Компания",
+    "Дата", "Имя", "Телефон", "Telegram / МАКС", "Компания",
     "Сегмент", "Основной продукт", "Все рекомендации",
-    "Индустрия", "Где продаёт", "Оборот", "Сайт", "Боли бизнеса", "Планы", "Бюджет", "Клиент банка"
+    "Индустрия", "Где продаёт", "Оборот", "Сайт", "Сдерживает рост", "Планы", "Бюджет", "Кто ведёт", "Клиент банка"
   ];
   function cell(v){
     v = String(v == null ? "" : v);
@@ -1493,8 +1511,7 @@ function exportCsv(rows){
       d.createdDate || "",
       d.name,
       d.phone,
-      d.telegram,
-      d.maxLogin || "",
+      d.messenger || d.telegram || d.maxLogin || "",
       d.company,
       TEMP_LABEL[d.temperature] || "",
       d.mainProduct,
@@ -1506,6 +1523,7 @@ function exportCsv(rows){
       t.pains || "",
       t.plans || "",
       t.budget || "",
+      t.team || "",
       t.bank || ""
     ].map(cell).join(";"));
   });
