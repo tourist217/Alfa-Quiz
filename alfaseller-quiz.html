@@ -586,19 +586,14 @@ var LEADS_KEY = "as_quiz_leads_v2";
 
 var DEFAULT_CONFIG = {
   googleScriptUrl: "https://script.google.com/macros/s/AKfycbwCyKGwXBP2wnp5nKoFmPyvnI1ICdFfwXxnNsVcCP9n1YFDZx9_zpFxbrQWvdxu2Yf1/exec",
-  yandexWebhookUrl: "",
-  telegramBotToken: "8664471801:AAHsGQpxOxBtEq3gwJTq9LtcTPNMLRtM5fA",
-  telegramChatId: "@alfasellerleads"
+  yandexWebhookUrl: ""
 };
 
 function getSettings(){
   try {
     var custom = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
     var res = Object.assign({}, DEFAULT_CONFIG, custom);
-    // Принудительно используем боевую проверенную конфигурацию
     res.googleScriptUrl = DEFAULT_CONFIG.googleScriptUrl;
-    res.telegramBotToken = DEFAULT_CONFIG.telegramBotToken;
-    res.telegramChatId = DEFAULT_CONFIG.telegramChatId;
     return res;
   } catch(e){
     return Object.assign({}, DEFAULT_CONFIG);
@@ -813,53 +808,6 @@ function updateLeadSync(id, status){
   saveLeads(list);
 }
 
-function tgEsc(s){
-  return String(s == null ? "" : s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function sendToTelegram(settings, doc){
-  if(!settings.telegramBotToken || !settings.telegramChatId) return Promise.resolve(false);
-  var token = settings.telegramBotToken.trim();
-  var chatId = settings.telegramChatId.trim();
-  if(chatId && chatId.charAt(0) !== "@" && !/^-?\d+$/.test(chatId)){
-    chatId = "@" + chatId;
-  }
-  
-  var t = doc.answersText || {};
-  var msgr = doc.messenger || doc.telegram || doc.maxLogin;
-  var text = "🔥 <b>Новый лид с квиза Альфа Селлер!</b>\n\n" +
-    "👤 <b>Имя:</b> " + tgEsc(doc.name) + "\n" +
-    "📞 <b>Телефон:</b> <code>" + tgEsc(doc.phone) + "</code>\n" +
-    (msgr ? "💬 <b>Telegram / МАКС:</b> <code>" + tgEsc(msgr) + "</code>\n" : "") +
-    (doc.company ? "🏢 <b>Компания:</b> " + tgEsc(doc.company) + "\n" : "") +
-    "\n🎯 <b>Сегмент:</b> " + (TEMP_LABEL[doc.temperature] || doc.leadType || "—") + "\n" +
-    "⭐ <b>Рекомендация:</b> <b>" + tgEsc(doc.mainProduct || doc.primaryProduct) + "</b>\n" +
-    "📦 <b>Все продукты:</b> " + tgEsc((doc.productNames || doc.recommendedProducts || []).join(", ")) + "\n\n" +
-    "📊 <b>Параметры:</b>\n" +
-    "• Отрасль: " + tgEsc(t.industry || doc.industry || "—") + "\n" +
-    "• Где продаёт: " + tgEsc(t.channels || doc.channels || "—") + "\n" +
-    "• Оборот: " + tgEsc(t.turnover || doc.turnover || "—") + "\n" +
-    (t.site || doc.siteState ? "• Сайт: " + tgEsc(t.site || doc.siteState) + "\n" : "") +
-    (t.pains || doc.pains ? "• Сдерживает рост: " + tgEsc(t.pains || doc.pains) + "\n" : "") +
-    (t.plans || doc.plans ? "• Планы: " + tgEsc(t.plans || doc.plans) + "\n" : "") +
-    "• Бюджет: " + tgEsc(t.budget || doc.budget || "—") + "\n" +
-    (t.team || doc.team ? "• Кто ведёт: " + tgEsc(t.team || doc.team) + "\n" : "") +
-    "• Клиент банка: " + tgEsc(t.bank || doc.bankClient || "—");
-
-  return fetch("https://api.telegram.org/bot" + token + "/sendMessage", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: text,
-      parse_mode: "HTML"
-    })
-  }).then(function(r){ return r.ok; }).catch(function(){ return false; });
-}
-
 function sendToWebhook(url, doc){
   if(!url || !url.trim()) return Promise.resolve(false);
   return fetch(url.trim(), {
@@ -873,9 +821,6 @@ function sendToWebhook(url, doc){
 function dispatchLead(doc){
   var settings = getSettings();
   var promises = [];
-  if(settings.telegramBotToken && settings.telegramChatId){
-    promises.push(sendToTelegram(settings, doc));
-  }
   if(settings.googleScriptUrl){
     var gDoc = Object.assign({}, doc);
     if(gDoc.phone && gDoc.phone.charAt(0) === '+'){
@@ -907,7 +852,7 @@ function syncPendingLeads(){
   var pending = leads.filter(function(l){ return !l.synced; });
   if(!pending.length) return Promise.resolve(0);
   var settings = getSettings();
-  if(!settings.googleScriptUrl && !settings.yandexWebhookUrl && !settings.telegramBotToken){
+  if(!settings.googleScriptUrl && !settings.yandexWebhookUrl){
     return Promise.resolve(0);
   }
 
@@ -1561,18 +1506,8 @@ if(setBtn) setBtn.onclick = function(){
           '<input type="url" id="s_yandex" placeholder="https://functions.yandexcloud.net/... или Albato/Make" value="' + esc(cfg.yandexWebhookUrl) + '">' +
           '<div class="help">URL для отправки в Яндекс Таблицу через Яндекс Функцию или вебхук.</div>' +
         '</div>' +
-        '<div class="settings-group">' +
-          '<label>Telegram Bot Token:</label>' +
-          '<input type="text" id="s_tg_token" placeholder="123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ" value="' + esc(cfg.telegramBotToken) + '">' +
-        '</div>' +
-        '<div class="settings-group">' +
-          '<label>Telegram Chat ID группы менеджеров:</label>' +
-          '<input type="text" id="s_tg_chat" placeholder="-1001234567890 или @channel" value="' + esc(cfg.telegramChatId) + '">' +
-          '<div class="help">Бот пришлёт красиво оформленную карточку лида прямо в чат стенда.</div>' +
-        '</div>' +
         '<div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">' +
           '<button type="button" class="btn btn-lime btn-small" id="saveCfgBtn">Сохранить настройки</button>' +
-          '<button type="button" class="btn btn-small btn-outline" id="testTgBtn">Тест Telegram</button>' +
           '<button type="button" class="btn btn-small btn-outline" id="clearLeadsBtn" style="color:var(--red);margin-left:auto">Очистить лиды</button>' +
         '</div>' +
       '</div>' +
@@ -1590,44 +1525,11 @@ if(setBtn) setBtn.onclick = function(){
   document.getElementById("saveCfgBtn").onclick = function(){
     var s = {
       googleScriptUrl: document.getElementById("s_google").value.trim(),
-      yandexWebhookUrl: document.getElementById("s_yandex").value.trim(),
-      telegramBotToken: document.getElementById("s_tg_token").value.trim(),
-      telegramChatId: document.getElementById("s_tg_chat").value.trim()
+      yandexWebhookUrl: document.getElementById("s_yandex").value.trim()
     };
     saveSettings(s);
     toast("Настройки сохранены!");
     document.getElementById("modalSlot").innerHTML = "";
-  };
-
-  document.getElementById("testTgBtn").onclick = function(){
-    var s = {
-      telegramBotToken: document.getElementById("s_tg_token").value.trim(),
-      telegramChatId: document.getElementById("s_tg_chat").value.trim()
-    };
-    if(!s.telegramBotToken || !s.telegramChatId){
-      toast("Укажите Bot Token и Chat ID");
-      return;
-    }
-    toast("Отправка тестового сообщения…");
-    sendToTelegram(s, {
-      name: "Тестовый Посетитель",
-      phone: "+7 (999) 000-00-00",
-      telegram: "@test_user",
-      maxLogin: "test_max_id",
-      company: "Тестовая компания",
-      temperature: "hot",
-      mainProduct: "Альфа-Селлер Профи",
-      productNames: ["Альфа-Селлер Профи", "MarketGuru", "Подели"],
-      answersText: {
-        industry: "Одежда и обувь",
-        channels: "Маркетплейсы, Соцсети",
-        turnover: "1–5 млн ₽",
-        budget: "150 000 – 500 000 ₽",
-        bank: "Да, расчётный счёт"
-      }
-    }).then(function(ok){
-      toast(ok ? "✓ Сообщение успешно пришло в Telegram!" : "Ошибка отправки в Telegram. Проверьте токен и чат ID");
-    });
   };
 
   document.getElementById("clearLeadsBtn").onclick = function(){
