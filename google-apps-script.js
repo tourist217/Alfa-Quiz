@@ -48,9 +48,9 @@ function doPost(e) {
       
       sheet.appendRow(headers);
       
-      // Стилизуем шапку в цвета Альфа-Банка
+      // Стилизуем шапку в цвета Альфа-Банка (Глубокий графит)
       var headerRange = sheet.getRange(1, 1, 1, headers.length);
-      headerRange.setBackground("#1B1B21");
+      headerRange.setBackground("#121212");
       headerRange.setFontColor("#FFFFFF");
       headerRange.setFontWeight("bold");
       headerRange.setFontSize(11);
