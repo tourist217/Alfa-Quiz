@@ -9,8 +9,7 @@
  * 5. Нажмите: «Развернуть» (Deploy) -> «Управление развертываниями» (Manage deployments) ->
  *    значок карандаша (Редактировать) -> в поле «Версия» выберите «Новая версия» (New version) -> «Развернуть» (Deploy).
  * 
- * Готово! Теперь колонка «Email» и новые вопросы будут автоматически заполняться.
- * Если колонки «Email» ещё не было в таблице, скрипт добавит её автоматически!
+ * Готово! Все поля (включая «Email», «Номер лотереи», новые вопросы) будут автоматически записываться в таблицу.
  */
 
 function doPost(e) {
@@ -30,6 +29,7 @@ function doPost(e) {
       "Email",
       "Telegram / МАКС",
       "Компания / Бренд",
+      "Номер лотереи",
       "Сегмент (Лид)",
       "Основной продукт",
       "Все рекомендации",
@@ -66,17 +66,21 @@ function doPost(e) {
 
     var t = data.answersText || {};
     var msgr = data.messenger || data.telegram || data.maxLogin || "";
+    var lottery = data.lottery || data.lotteryNumber || "";
 
     // Читаем текущие заголовки таблицы
     var currentHeaders = sheet.getRange(1, 1, 1, Math.max(lastCol, 1)).getValues()[0];
     
     // Проверяем наличие колонки Email
     var emailColIdx = -1;
+    var lotteryColIdx = -1;
     for (var i = 0; i < currentHeaders.length; i++) {
       var h = String(currentHeaders[i]).toLowerCase();
       if (h.indexOf("email") !== -1 || h.indexOf("почта") !== -1) {
         emailColIdx = i;
-        break;
+      }
+      if (h.indexOf("лотере") !== -1 || h.indexOf("билет") !== -1 || h.indexOf("купон") !== -1) {
+        lotteryColIdx = i;
       }
     }
 
@@ -96,7 +100,26 @@ function doPost(e) {
       } else {
         sheet.getRange(1, currentHeaders.length + 1).setValue("Email").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
       }
-      // Обновляем список заголовков после добавления колонки
+      lastCol = sheet.getLastColumn();
+      currentHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+    }
+
+    // Если в таблице ещё нет колонки «Номер лотереи», добавляем её после «Компания / Бренд»
+    if (lotteryColIdx === -1 && lastRow > 0) {
+      var compColIdx = -1;
+      for (var k = 0; k < currentHeaders.length; k++) {
+        var kh = String(currentHeaders[k]).toLowerCase();
+        if (kh.indexOf("компан") !== -1 || kh.indexOf("бренд") !== -1) {
+          compColIdx = k + 1;
+          break;
+        }
+      }
+      if (compColIdx > 0) {
+        sheet.insertColumnAfter(compColIdx);
+        sheet.getRange(1, compColIdx + 1).setValue("Номер лотереи").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
+      } else {
+        sheet.getRange(1, currentHeaders.length + 1).setValue("Номер лотереи").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
+      }
       lastCol = sheet.getLastColumn();
       currentHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
     }
@@ -121,6 +144,8 @@ function doPost(e) {
         row.push(data.maxLogin || msgr);
       } else if (col.indexOf("компан") !== -1 || col.indexOf("бренд") !== -1) {
         row.push(data.company || "");
+      } else if (col.indexOf("лотере") !== -1 || col.indexOf("билет") !== -1 || col.indexOf("купон") !== -1) {
+        row.push(lottery);
       } else if (col.indexOf("сегмент") !== -1 || col.indexOf("температур") !== -1) {
         row.push(data.temperatureLabel || data.temperature || "");
       } else if (col.indexOf("основной продукт") !== -1) {

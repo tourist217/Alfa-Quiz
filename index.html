@@ -1006,7 +1006,7 @@ function fresh(){
     screen: "start",
     qi: 0,
     answers: {},
-    contact: { name: "", phone: "", email: "", messenger: "", company: "", consent: false },
+    contact: { name: "", phone: "", email: "", messenger: "", company: "", lottery: "", consent: false },
     result: null,
     saveStatus: null,
     errors: {}
@@ -1182,6 +1182,7 @@ function renderContacts(){
         field("email", "Электронная почта", " (необязательно)", c.email || "", "email", "email", e.email, "name@company.ru") +
         field("messenger", "Telegram или МАКС", " (логин/ник)", c.messenger || c.telegram || c.maxLogin || "", "text", "off", null, "@username или ник в МАКС") +
         field("company", "Название компании / бренда", " (необязательно)", c.company, "text", "organization", null, "ООО или бренд") +
+        field("lottery", "Номер лотереи", " (необязательно)", c.lottery || "", "text", "off", null, "Номер вашего билета или купона") +
         '<label class="consent">' +
           '<input type="checkbox" id="consent"' + (c.consent ? " checked" : "") + '>' +
           '<span>Согласен на обработку персональных данных для связи со мной по подобранным продуктам платформы Альфа-Селлер' +
@@ -1194,7 +1195,7 @@ function renderContacts(){
       '</div>' +
     '</section>';
 
-  ["name","email","messenger","company"].forEach(function(k){
+  ["name","email","messenger","company","lottery"].forEach(function(k){
     var el = document.getElementById("f-" + k);
     if(el) el.oninput = function(){ state.contact[k] = el.value; };
   });
@@ -1294,6 +1295,8 @@ function submit(){
     telegram: msgr,
     maxLogin: msgr,
     company: c.company.trim(),
+    lottery: (c.lottery || "").trim(),
+    lotteryNumber: (c.lottery || "").trim(),
     consent: true,
     temperature: temp,
     temperatureLabel: TEMP_LABEL[temp],
@@ -1394,19 +1397,8 @@ function renderResult(){
     render();
   };
 
-  // Kiosk mode countdown (auto-reset on iPad)
-  var left = 60, cd = document.getElementById("countdown");
-  countdownTimer = setInterval(function(){
-    left--;
-    if(cd && left <= 30){
-      cd.textContent = "· Экран обновится через " + left + " с.";
-    }
-    if(left <= 0){
-      clearInterval(countdownTimer);
-      state = fresh();
-      render();
-    }
-  }, 1000);
+  // Без таймера сброса: экран остаётся открытым до ручного нажатия пользователем
+  clearInterval(countdownTimer);
 }
 
 /* ========================================================
@@ -1546,6 +1538,7 @@ function showLeadModal(id){
           ((d.telegram ? '<p><b>Telegram:</b> ' + esc(d.telegram) + '</p>' : '') +
            (d.maxLogin ? '<p><b>Логин в МАКС:</b> <code>' + esc(d.maxLogin) + '</code></p>' : ''))) +
         (d.company ? '<p><b>Компания:</b> ' + esc(d.company) + '</p>' : '') +
+        (d.lottery ? '<p><b>Номер лотереи:</b> <span style="background:var(--lime);color:var(--on-lime);padding:2px 8px;border-radius:6px;font-weight:700">№ ' + esc(d.lottery) + '</span></p>' : '') +
         '<hr style="border:0;border-top:1px solid var(--border);margin:16px 0">' +
         '<p><b>Сегмент:</b> ' + esc(d.temperatureLabel || TEMP_LABEL[d.temperature]) + '</p>' +
         '<p><b>Основной продукт:</b> <b style="color:var(--lime);background:var(--bar);padding:2px 8px;border-radius:6px">' + esc(d.mainProduct) + '</b></p>' +
@@ -1574,7 +1567,7 @@ function showLeadModal(id){
 
 function exportCsv(rows){
   var head = [
-    "Дата", "Имя", "Телефон", "Email", "Telegram / МАКС", "Компания",
+    "Дата", "Имя", "Телефон", "Email", "Telegram / МАКС", "Компания", "Номер лотереи",
     "Сегмент", "Основной продукт", "Все рекомендации",
     "Индустрия", "Где продаёт", "Оборот", "Сайт", "Сдерживает рост", "Планы", "Бюджет", "Кто ведёт", "Клиент банка"
   ];
@@ -1591,7 +1584,8 @@ function exportCsv(rows){
       d.phone,
       d.email || "",
       d.messenger || d.telegram || d.maxLogin || "",
-      d.company,
+      d.company || "",
+      d.lottery || "",
       TEMP_LABEL[d.temperature] || "",
       d.mainProduct,
       (d.productNames || []).join(", "),
@@ -1678,21 +1672,9 @@ if(setBtn) setBtn.onclick = function(){
 };
 
 /* ========================================================
-   9. KIOSK IDLE TIMEOUT & SECRET GESTURE
+   9. KIOSK IDLE TIMEOUT — ОТКЛЮЧЁН (сброс по бездействию запрещён)
    ======================================================== */
-function armIdle(){
-  clearTimeout(idleTimer);
-  // On questions or contacts screen, reset if left untouched for 2 minutes
-  if(state.screen === "q" || state.screen === "contacts"){
-    idleTimer = setTimeout(function(){
-      state = fresh();
-      render();
-    }, 120000);
-  }
-}
-["pointerdown","keydown"].forEach(function(ev){
-  document.addEventListener(ev, armIdle, {passive:true});
-});
+// Таймер бездействия полностью отключён: форма не сбрасывается ни при каких паузах
 
 
 
