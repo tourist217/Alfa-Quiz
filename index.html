@@ -6,11 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Альфа Селлер">
-<meta name="format-detection" content="telephone=no">
-<title>Альфа Селлер — Подбор продуктов для бизнеса</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Автономный лицензионный шрифт YFF Rare из брендбука Альфа-Банка 2026 встроен ниже -->
 <style>
 @font-face {
   font-family: 'YFF Rare';
@@ -23,8 +19,8 @@
 
 :root{
   color-scheme: light;
-  --font-display: "YFF Rare", "Unbounded", "Onest", sans-serif;
-  --font-body: "Onest", -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
+  --font-display: "YFF Rare", -apple-system, sans-serif;
+  --font-body: "YFF Rare", -apple-system, sans-serif;
 
   /* Базовая палитра брендбука Альфа Селлер 2026 */
   --lime: #A6ED00;          /* Ярко-зеленый (акцентный) */
@@ -75,10 +71,14 @@ body{
   margin:0;min-height:100%;
   background:var(--bg);color:var(--text);
   font-family:var(--font-body);
+  font-variation-settings: 'wdth' 87, 'wght' 400; /* Брендбук Альфа-Селлер: YFF Rare Hyper Regular (Наборный текст) */
   font-size:18px;line-height:1.45;
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+}
+b,strong,th,.field label,.hero-facts li,.why li{
+  font-variation-settings: 'wdth' 87, 'wght' 700; /* YFF Rare Hyper Bold */
 }
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
@@ -107,6 +107,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .brand{
   display:flex;align-items:center;gap:12px;
   font-family:var(--font-display);font-weight:800;font-size:clamp(18px,2.1vw,21px);
+  font-variation-settings: 'wdth' 110, 'wght' 800; /* YFF Rare Power Bold (Заголовки) */
   letter-spacing:-0.02em;cursor:pointer;
 }
 .brand svg{width:26px;height:26px;flex:none;color:var(--text)}
@@ -114,11 +115,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .pill{
   background:var(--bar);color:var(--on-bar);border:1.5px solid rgba(255,255,255,0.08);
   font-family:var(--font-display);font-weight:700;font-size:13px;padding:5px 14px 5px 6px;border-radius:999px;
+  font-variation-settings: 'wdth' 100, 'wght' 700; /* YFF Rare Mega Bold (Подзаголовки) */
   display:inline-flex;align-items:center;gap:8px;
   white-space:nowrap;user-select:none;
 }
 .badge-ekom{
   background:var(--lime);color:var(--on-lime);font-family:var(--font-display);font-weight:800;font-size:11.5px;
+  font-variation-settings: 'wdth' 100, 'wght' 800; /* YFF Rare Mega Bold */
   padding:3px 10px;border-radius:999px;letter-spacing:0.04em;
 }
 .icon-btn{
@@ -140,6 +143,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
   min-height:64px;padding:16px 36px;border-radius:999px;border:0;cursor:pointer;
   font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:-0.01em;
+  font-variation-settings: 'wdth' 100, 'wght' 700; /* YFF Rare Mega Bold */
   background:var(--bar);color:var(--on-bar);
   transition:transform .12s ease, opacity .15s ease, background-color .15s ease, box-shadow .15s ease;
   user-select:none;-webkit-user-select:none;
@@ -175,15 +179,17 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero h1{
   margin:0;font-family:var(--font-display);font-size:clamp(32px,4.8vw,64px);line-height:1.06;
   font-weight:800;letter-spacing:-0.03em;max-width:18ch;
+  font-variation-settings: 'wdth' 110, 'wght' 800; /* Брендбук: YFF Rare Power Bold (Заголовки) */
 }
 .hero-facts{
   list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
   gap:12px 24px;font-size:clamp(16px,1.9vw,19px);font-weight:700;
 }
-.hero-facts li{display:flex;align-items:center;gap:10px}
+.hero-facts li{display:flex;align-items:center;gap:10px;font-variation-settings: 'wdth' 87, 'wght' 700;}
 .hero-tag{
   display:inline-flex;align-items:center;background:var(--bar);color:var(--on-bar);
   font-family:var(--font-display);font-weight:700;font-size:12px;padding:6px 14px;border-radius:999px;
+  font-variation-settings: 'wdth' 100, 'wght' 700; /* YFF Rare Mega Bold */
   letter-spacing:0.04em;align-self:flex-start;margin-bottom:-6px;
 }
 .hero-shape{
@@ -209,7 +215,10 @@ button,input,select,textarea{font:inherit;color:inherit}
   background:var(--bar);color:var(--on-bar);
   border-radius:999px;padding:12px 24px;
 }
-.progress-label{font-family:var(--font-display);font-weight:700;font-size:14px;white-space:nowrap;letter-spacing:0.02em}
+.progress-label{
+  font-family:var(--font-display);font-weight:700;font-size:14px;white-space:nowrap;letter-spacing:0.02em;
+  font-variation-settings: 'wdth' 100, 'wght' 700; /* YFF Rare Mega Bold */
+}
 .progress-track{flex:1;display:flex;gap:6px}
 .progress-track span{
   flex:1;height:8px;border-radius:99px;
@@ -221,8 +230,13 @@ button,input,select,textarea{font:inherit;color:inherit}
   font-family:var(--font-display);
   font-size:clamp(24px,3.4vw,38px);line-height:1.15;
   font-weight:800;letter-spacing:-0.02em;max-width:28ch;
+  font-variation-settings: 'wdth' 110, 'wght' 800; /* Брендбук: YFF Rare Power Bold (Заголовки) */
 }
-.qhint{margin:0;color:var(--muted);font-size:clamp(16px,1.9vw,18px)}
+.qhint{
+  margin:0;color:var(--muted);font-size:clamp(16px,1.9vw,18px);
+  font-family:var(--font-body);
+  font-variation-settings: 'wdth' 87, 'wght' 400; /* Брендбук: YFF Rare Hyper Regular (Наборный текст) */
+}
 .options{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
   gap:14px;margin-top:clamp(18px,2.6vw,28px);
@@ -231,6 +245,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   display:flex;align-items:center;gap:16px;text-align:left;
   min-height:76px;padding:18px 24px;border-radius:22px;
   background:var(--panel);border:2px solid transparent;cursor:pointer;
+  font-family:var(--font-body);
+  font-variation-settings: 'wdth' 87, 'wght' 500; /* Брендбук: YFF Rare Hyper Regular (Наборный текст) */
   font-size:clamp(16.5px,1.9vw,18.5px);font-weight:600;line-height:1.3;
   transition:background-color .15s ease, transform .1s ease, border-color .15s ease, box-shadow .15s ease;
   user-select:none;-webkit-user-select:none;
@@ -241,18 +257,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   background:var(--lime);color:var(--on-lime);
   border-color:rgba(0,0,0,0.06);
   box-shadow:0 4px 18px rgba(166,237,0,0.25);
-}
-.opt[aria-pressed="true"] .tick{background:var(--on-lime)}
-.opt[disabled]{opacity:.38;cursor:not-allowed}
-  font-size:clamp(17px,2vw,19px);font-weight:600;line-height:1.3;
-  transition:background-color .15s ease, transform .1s ease, border-color .15s ease;
-  user-select:none;-webkit-user-select:none;
-}
-.opt:active{transform:scale(0.99)}
-.opt:hover{background:var(--panel-hover)}
-.opt[aria-pressed="true"]{
-  background:var(--lime);color:var(--on-lime);
-  border-color:rgba(0,0,0,0.08);
+  font-variation-settings: 'wdth' 87, 'wght' 700; /* YFF Rare Hyper Bold при выборе */
 }
 .opt[aria-pressed="true"] .tick{background:var(--on-lime)}
 .opt[disabled]{opacity:.38;cursor:not-allowed}
@@ -267,20 +272,29 @@ button,input,select,textarea{font:inherit;color:inherit}
   gap:18px 22px;margin-top:clamp(18px,2.6vw,28px);
 }
 @media (max-width:720px){.form{grid-template-columns:1fr}}
-.field label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
-.field label span{color:var(--muted);font-weight:500}
+.field label{
+  display:block;font-weight:700;font-size:15px;margin-bottom:8px;
+  font-variation-settings: 'wdth' 87, 'wght' 700; /* YFF Rare Hyper Bold */
+}
+.field label span{color:var(--muted);font-weight:500;font-variation-settings: "wdth" 87, "wght" 400;}
 .field input{
-  width:100%;min-height:62px;padding:14px 20px;border-radius:18px;
-  border:2px solid var(--border);background:var(--field);
+  width:100%;min-height:56px;padding:14px 20px;border-radius:18px;
+  border:2px solid var(--border);background:var(--field);color:var(--text);
+  font-family:var(--font-body);
+  font-variation-settings: 'wdth' 87, 'wght' 500; /* YFF Rare Hyper Regular */
   font-size:18px;font-weight:600;transition:border-color .15s ease;
 }
-.field input:focus{border-color:var(--lime);outline:none;background:var(--paper)}
-.field input[aria-invalid="true"]{border-color:var(--red)}
-.err{color:var(--red);font-size:14px;font-weight:700;margin-top:6px;min-height:1px}
+.field input:focus{border-color:var(--bar);background:var(--paper)}
+.err{
+  color:var(--red);font-size:14px;font-weight:700;margin-top:6px;min-height:1px;
+  font-variation-settings: 'wdth' 87, 'wght' 700;
+}
 .consent{
   grid-column:1/-1;display:flex;gap:14px;align-items:flex-start;
   background:var(--panel);border-radius:18px;padding:16px 20px;cursor:pointer;
   font-size:15px;line-height:1.45;user-select:none;
+  font-family:var(--font-body);
+  font-variation-settings: 'wdth' 87, 'wght' 400; /* YFF Rare Hyper Regular */
 }
 .consent input{width:26px;height:26px;margin:2px 0 0;flex:none;accent-color:var(--lime)}
 
@@ -290,8 +304,13 @@ button,input,select,textarea{font:inherit;color:inherit}
   font-family:var(--font-display);
   border-radius:999px;padding:12px 42px;margin:0;
   font-size:clamp(20px,2.5vw,26px);font-weight:800;letter-spacing:-0.015em;text-align:center;
+  font-variation-settings: 'wdth' 110, 'wght' 800; /* Брендбук: YFF Rare Power Bold (Заголовки) */
 }
-.result-lead{text-align:center;color:var(--muted);margin:12px auto 0;max-width:50ch;font-size:18px}
+.result-lead{
+  text-align:center;color:var(--muted);margin:12px auto 0;max-width:50ch;font-size:18px;
+  font-family:var(--font-body);
+  font-variation-settings: 'wdth' 87, 'wght' 400; /* YFF Rare Hyper Regular */
+}
 .main-card{
   margin-top:clamp(18px,2.6vw,28px);
   background:var(--lime);color:var(--on-lime);border-radius:28px;
@@ -303,14 +322,19 @@ button,input,select,textarea{font:inherit;color:inherit}
 .main-card h3{
   margin:0;font-family:var(--font-display);
   font-size:clamp(28px,3.8vw,44px);line-height:1.06;font-weight:800;letter-spacing:-0.025em;
+  font-variation-settings: 'wdth' 100, 'wght' 800; /* Брендбук: YFF Rare Mega Bold (Подзаголовки) */
 }
-.main-card .desc{margin:14px 0 0;font-size:18px;line-height:1.4;max-width:40ch}
+.main-card .desc{
+  margin:14px 0 0;font-size:18px;line-height:1.4;max-width:40ch;
+  font-variation-settings: 'wdth' 87, 'wght' 400;
+}
 .budget-badge{
   display:inline-block;margin-top:18px;font-family:var(--font-display);font-weight:700;font-size:15px;
+  font-variation-settings: 'wdth' 100, 'wght' 700; /* YFF Rare Mega Bold */
   background:rgba(27,27,33,0.08);padding:8px 16px;border-radius:12px;
 }
 .why{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;align-self:center}
-.why li{display:flex;gap:12px;align-items:flex-start;font-size:17px;font-weight:600;line-height:1.35}
+.why li{display:flex;gap:12px;align-items:flex-start;font-size:17px;font-weight:600;line-height:1.35;font-variation-settings: "wdth" 87, "wght" 600;}
 .why .tick{margin-top:7px}
 .main-card .why{background:rgba(255,255,255,.65);border-radius:22px;padding:22px 24px}
 .extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
@@ -318,6 +342,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .extra h4{
   margin:0;font-family:var(--font-display);
   font-size:22px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;
+  font-variation-settings: 'wdth' 100, 'wght' 800; /* Брендбук: YFF Rare Mega Bold (Подзаголовки) */
 }
 .extra .desc{margin:0;color:var(--muted);font-size:16px;line-height:1.4}
 .extra .why{background:var(--panel);border-radius:18px;padding:16px 20px;align-self:stretch}
@@ -341,6 +366,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .ans-top h1{
   margin:0;font-family:var(--font-display);
   font-size:clamp(24px,3.2vw,34px);font-weight:800;letter-spacing:-0.025em;
+  font-variation-settings: 'wdth' 100, 'wght' 800; /* Mega Bold */
 }
 .ans-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:20px}
@@ -354,6 +380,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .stat b{
   display:block;font-family:var(--font-display);
   font-size:30px;font-weight:800;line-height:1;letter-spacing:-0.02em;
+  font-variation-settings: 'wdth' 100, 'wght' 800; /* Mega Bold */
 }
 .stat span{font-size:14.5px;font-weight:600;color:var(--muted)}
 .stat[aria-pressed="true"]{background:var(--bar);color:var(--on-bar);border-color:var(--bar)}
