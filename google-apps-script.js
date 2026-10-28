@@ -1,60 +1,60 @@
 /**
- * GOOGLE APPS SCRIPT ДЛЯ СБОРА ЛИДОВ С КВИЗА АЛЬФА СЕЛЛЕР
+ * GOOGLE APPS SCRIPT ДЛЯ СБОРА ЛИДОВ С КВИЗА АЛЬФА-СЕЛЛЕР
  * 
- * Инструкция по настройке за 2 минуты:
- * 1. Откройте Google Таблицу (или создайте новую на Google Диске: sheets.new).
- * 2. В меню выберите: «Расширения» (Extensions) -> «Apps Script».
- * 3. Удалите весь существующий там код и вставьте содержимое этого файла.
- * 4. Нажмите кнопку «Развернуть» (Deploy) -> «Новое развертывание» (New deployment).
- * 5. В типе выберите «Веб-приложение» (Web app).
- * 6. Настройки:
- *    - Описание: "Alfa Seller Quiz Webhook"
- *    - Запуск от имени: "Я" (Me)
- *    - У кого есть доступ (Who has access): "Все" (Anyone) — ЭТО ВАЖНО, чтобы квиз мог слать данные без авторизации.
- * 7. Нажмите «Развернуть» (Deploy), разрешите доступ (Authorize access).
- * 8. Скопируйте полученный «URL веб-приложения» (Web app URL) — вида https://script.google.com/macros/s/.../exec
- * 9. Вставьте этот URL в настройках квиза (иконка шестерёнки в шапке).
+ * Инструкция по обновлению скрипта в вашей Google Таблице:
+ * 1. Откройте Google Таблицу.
+ * 2. В верхнем меню выберите: «Расширения» (Extensions) -> «Apps Script».
+ * 3. Замените весь код на содержимое этого файла.
+ * 4. Нажмите «Сохранить» (значок дискеты Ctrl+S / Cmd+S).
+ * 5. Нажмите: «Развернуть» (Deploy) -> «Управление развертываниями» (Manage deployments) ->
+ *    значок карандаша (Редактировать) -> в поле «Версия» выберите «Новая версия» (New version) -> «Развернуть» (Deploy).
+ * 
+ * Готово! Теперь колонка «Email» и новые вопросы будут автоматически заполняться.
+ * Если колонки «Email» ещё не было в таблице, скрипт добавит её автоматически!
  */
 
 function doPost(e) {
   try {
     var lock = LockService.getScriptLock();
-    lock.waitLock(10000); // Предотвращает конфликты при одновременной отправке с нескольких планшетов
+    lock.waitLock(10000); // Предотвращает конфликты при одновременной отправке с нескольких устройств
 
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // Если таблица пустая, автоматически создаем шапку со стилями
-    if (sheet.getLastRow() === 0) {
-      var headers = [
-        "ID Лида",
-        "Дата и время",
-        "Имя клиента",
-        "Номер телефона",
-        "Telegram",
-        "Логин в МАКС",
-        "Компания / Бренд",
-        "Сегмент (Лид)",
-        "Основной продукт",
-        "Все рекомендации",
-        "Индустрия / Ниша",
-        "Где продаёт",
-        "Оборот в месяц",
-        "Состояние сайта",
-        "Главные боли",
-        "Планы на полгода",
-        "Бюджет на маркетинг",
-        "Клиент банка"
-      ];
-      
-      sheet.appendRow(headers);
-      
-      // Стилизуем шапку в цвета Альфа-Банка (Глубокий графит)
-      var headerRange = sheet.getRange(1, 1, 1, headers.length);
-      headerRange.setBackground("#121212");
+    var lastRow = sheet.getLastRow();
+    var lastCol = sheet.getLastColumn();
+
+    var defaultHeaders = [
+      "ID Лида",
+      "Дата и время",
+      "Имя клиента",
+      "Номер телефона",
+      "Email",
+      "Telegram / МАКС",
+      "Компания / Бренд",
+      "Сегмент (Лид)",
+      "Основной продукт",
+      "Все рекомендации",
+      "Индустрия / Ниша",
+      "Где продаёт",
+      "Оборот в месяц",
+      "Состояние сайта",
+      "Главные боли",
+      "Планы на полгода",
+      "Бюджет на маркетинг",
+      "Кто ведёт сайт и рекламу",
+      "Клиент банка"
+    ];
+
+    // Если таблица абсолютно пустая — создаём шапку
+    if (lastRow === 0) {
+      sheet.appendRow(defaultHeaders);
+      var headerRange = sheet.getRange(1, 1, 1, defaultHeaders.length);
+      headerRange.setBackground("#121212"); // Фирменный глубокий графит
       headerRange.setFontColor("#FFFFFF");
       headerRange.setFontWeight("bold");
       headerRange.setFontSize(11);
       sheet.setFrozenRows(1);
+      lastRow = 1;
+      lastCol = defaultHeaders.length;
     }
 
     var data = {};
@@ -65,41 +65,110 @@ function doPost(e) {
     }
 
     var t = data.answersText || {};
+    var msgr = data.messenger || data.telegram || data.maxLogin || "";
 
-    var row = [
-      data.id || "",
-      data.createdDate || new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" }),
-      data.name || "",
-      data.phone || "",
-      data.telegram || "",
-      data.maxLogin || "",
-      data.company || "",
-      data.temperatureLabel || data.temperature || "",
-      data.mainProduct || "",
-      (data.productNames || []).join(", "),
-      data.industry || t.industry || "",
-      t.channels || data.channels || "",
-      t.turnover || data.turnover || "",
-      t.site || data.siteState || "",
-      t.pains || data.pains || "",
-      t.plans || data.plans || "",
-      t.budget || data.budget || "",
-      t.bank || data.bankClient || ""
-    ];
+    // Читаем текущие заголовки таблицы
+    var currentHeaders = sheet.getRange(1, 1, 1, Math.max(lastCol, 1)).getValues()[0];
+    
+    // Проверяем наличие колонки Email
+    var emailColIdx = -1;
+    for (var i = 0; i < currentHeaders.length; i++) {
+      var h = String(currentHeaders[i]).toLowerCase();
+      if (h.indexOf("email") !== -1 || h.indexOf("почта") !== -1) {
+        emailColIdx = i;
+        break;
+      }
+    }
+
+    // Если в таблице ещё нет колонки Email, аккуратно вставляем её после колонки «Телефон»
+    if (emailColIdx === -1 && lastRow > 0) {
+      var phoneColIdx = -1;
+      for (var p = 0; p < currentHeaders.length; p++) {
+        var ph = String(currentHeaders[p]).toLowerCase();
+        if (ph.indexOf("телефон") !== -1 || ph.indexOf("phone") !== -1) {
+          phoneColIdx = p + 1; // 1-based index
+          break;
+        }
+      }
+      if (phoneColIdx > 0) {
+        sheet.insertColumnAfter(phoneColIdx);
+        sheet.getRange(1, phoneColIdx + 1).setValue("Email").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
+      } else {
+        sheet.getRange(1, currentHeaders.length + 1).setValue("Email").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
+      }
+      // Обновляем список заголовков после добавления колонки
+      lastCol = sheet.getLastColumn();
+      currentHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+    }
+
+    // Формируем значения строки строго по заголовкам колонок
+    var row = [];
+    for (var c = 0; c < currentHeaders.length; c++) {
+      var col = String(currentHeaders[c]).trim().toLowerCase();
+      if (col.indexOf("id") !== -1) {
+        row.push(data.id || "");
+      } else if (col.indexOf("дата") !== -1 || col.indexOf("date") !== -1) {
+        row.push(data.createdDate || new Date().toLocaleString("ru-RU", { timeZone: "Europe/Moscow" }));
+      } else if (col.indexOf("имя") !== -1 || col.indexOf("name") !== -1) {
+        row.push(data.name || "");
+      } else if (col.indexOf("телефон") !== -1 || col.indexOf("phone") !== -1) {
+        row.push(data.phone || "");
+      } else if (col.indexOf("email") !== -1 || col.indexOf("почта") !== -1) {
+        row.push(data.email || "");
+      } else if (col.indexOf("telegram") !== -1 || col.indexOf("макс") !== -1 || col.indexOf("мессенджер") !== -1) {
+        row.push(msgr);
+      } else if (col.indexOf("логин") !== -1) {
+        row.push(data.maxLogin || msgr);
+      } else if (col.indexOf("компан") !== -1 || col.indexOf("бренд") !== -1) {
+        row.push(data.company || "");
+      } else if (col.indexOf("сегмент") !== -1 || col.indexOf("температур") !== -1) {
+        row.push(data.temperatureLabel || data.temperature || "");
+      } else if (col.indexOf("основной продукт") !== -1) {
+        row.push(data.mainProduct || "");
+      } else if (col.indexOf("рекомендац") !== -1 || col.indexOf("все продукт") !== -1) {
+        row.push((data.productNames || []).join(", "));
+      } else if (col.indexOf("индустри") !== -1 || col.indexOf("ниша") !== -1 || col.indexOf("сфера") !== -1) {
+        row.push(data.industry || t.industry || "");
+      } else if (col.indexOf("где") !== -1 || col.indexOf("канал") !== -1) {
+        row.push(t.channels || data.channels || "");
+      } else if (col.indexOf("оборот") !== -1) {
+        row.push(t.turnover || data.turnover || "");
+      } else if (col.indexOf("сайт") !== -1 && col.indexOf("кто") === -1) {
+        row.push(t.site || data.siteState || "");
+      } else if (col.indexOf("боли") !== -1 || col.indexOf("рост") !== -1 || col.indexOf("сдержива") !== -1) {
+        row.push(t.pains || data.pains || "");
+      } else if (col.indexOf("план") !== -1) {
+        row.push(t.plans || data.plans || "");
+      } else if (col.indexOf("бюджет") !== -1) {
+        row.push(t.budget || data.budget || "");
+      } else if (col.indexOf("кто") !== -1 || col.indexOf("команд") !== -1 || col.indexOf("маркетолог") !== -1) {
+        row.push(t.team || data.team || "");
+      } else if (col.indexOf("банк") !== -1 || col.indexOf("клиент") !== -1) {
+        row.push(t.bank || data.bankClient || "");
+      } else {
+        row.push("");
+      }
+    }
 
     sheet.appendRow(row);
 
     // Подсветка строки по температуре лида
-    var lastRow = sheet.getLastRow();
-    if (data.temperature === "hot") {
-      sheet.getRange(lastRow, 8).setBackground("#FFD2CE").setFontColor("#900"); // Светло-красный для горячих
-    } else if (data.temperature === "warm") {
-      sheet.getRange(lastRow, 8).setBackground("#F4FFCC").setFontColor("#3E6B00"); // Светло-лаймовый для теплых
+    var newRow = sheet.getLastRow();
+    for (var s = 0; s < currentHeaders.length; s++) {
+      var sh = String(currentHeaders[s]).toLowerCase();
+      if (sh.indexOf("сегмент") !== -1 || sh.indexOf("температур") !== -1) {
+        if (data.temperature === "hot") {
+          sheet.getRange(newRow, s + 1).setBackground("#FFD2CE").setFontColor("#900");
+        } else if (data.temperature === "warm") {
+          sheet.getRange(newRow, s + 1).setBackground("#F4FFCC").setFontColor("#3E6B00");
+        }
+        break;
+      }
     }
 
     lock.releaseLock();
 
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", row: lastRow }))
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", row: newRow }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
