@@ -299,80 +299,79 @@ button,input,select,textarea{font:inherit;color:inherit}
 .consent input{width:26px;height:26px;margin:2px 0 0;flex:none;accent-color:var(--lime)}
 
 
-/* Thank You Screen */
-.thank-you-screen{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex:1;text-align:center;padding:clamp(16px,3vw,36px) 0;
-}
-.thank-you-card{
-  width:100%;max-width:640px;background:var(--paper);border:2.5px solid var(--lime);
-  border-radius:32px;padding:clamp(28px,5vw,52px) clamp(20px,4.5vw,44px);
-  display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.2vw,22px);
-  box-shadow:0 14px 44px rgba(166,237,0,0.18);
-  margin:auto;
-}
-.thank-you-icon{
-  width:80px;height:80px;border-radius:50%;background:var(--lime);color:var(--on-lime);
-  display:flex;align-items:center;justify-content:center;flex:none;
-  box-shadow:0 8px 24px rgba(166,237,0,0.45);
-}
-.thank-you-tag{
-  background:var(--bar);color:var(--on-bar);font-family:var(--font-display);
-  font-variation-settings:'wdth' 100,'wght' 700;font-size:12.5px;letter-spacing:0.04em;
-  padding:6px 18px;border-radius:999px;text-transform:uppercase;
-}
-.thank-you-title{
-  margin:0;font-family:var(--font-display);font-size:clamp(26px,4.2vw,40px);
-  line-height:1.15;font-weight:800;letter-spacing:-0.025em;color:var(--text);
-  font-variation-settings:'wdth' 110,'wght' 800;
-}
-.thank-you-lead{
-  margin:0;font-size:clamp(16.5px,2vw,18.5px);line-height:1.45;color:var(--muted);
-  font-family:var(--font-body);font-variation-settings:'wdth' 87,'wght' 400;max-width:44ch;
-}
+/* Thank You Screen — унифицирован с остальными экранами под iPad */
 .lottery-box{
-  background:var(--panel);border:2px solid rgba(166,237,0,0.5);border-radius:24px;
-  padding:clamp(20px,3.5vw,28px) clamp(16px,3vw,26px);width:100%;text-align:center;
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  box-shadow:0 6px 24px rgba(0,0,0,0.03);
+  margin-top:clamp(18px, 2.6vw, 30px);
+  background:var(--panel);
+  border:2px solid rgba(166,237,0,0.4);
+  border-radius:26px;
+  padding:clamp(26px, 4vw, 44px) clamp(18px, 3.5vw, 36px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:16px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.04);
 }
 .lottery-badge{
-  background:var(--lime);color:var(--on-lime);font-family:var(--font-display);
-  font-variation-settings:'wdth' 100,'wght' 800;font-size:11.5px;letter-spacing:0.04em;
-  padding:4px 14px;border-radius:999px;text-transform:uppercase;
+  background:var(--lime);
+  color:var(--on-lime);
+  font-family:var(--font-display);
+  font-variation-settings:'wdth' 100,'wght' 800;
+  font-size:12px;
+  letter-spacing:0.04em;
+  padding:4px 16px;
+  border-radius:999px;
+  text-transform:uppercase;
 }
 .lottery-title{
-  margin:0;font-family:var(--font-display);font-size:clamp(19px,2.6vw,25px);
-  line-height:1.2;font-weight:800;letter-spacing:-0.02em;color:var(--text);
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(22px, 3.2vw, 32px);
+  line-height:1.2;
+  font-weight:800;
+  letter-spacing:-0.02em;
+  color:var(--text);
   font-variation-settings:'wdth' 100,'wght' 800;
 }
-.lottery-desc{
-  margin:0;font-size:15px;line-height:1.45;color:var(--muted);
-  font-family:var(--font-body);font-variation-settings:'wdth' 87,'wght' 400;max-width:46ch;
-}
 .lottery-form{
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  width:100%;max-width:380px;margin-top:6px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  width:100%;
+  max-width:440px;
+  margin-top:8px;
 }
 .lottery-input{
-  width:100%;min-height:56px;padding:12px 20px;border-radius:999px;
-  border:2px solid var(--border);background:var(--paper);color:var(--text);
-  font-family:var(--font-display);font-variation-settings:'wdth' 100,'wght' 700;
-  font-size:22px;text-align:center;letter-spacing:0.05em;
+  width:100%;
+  min-height:64px;
+  padding:14px 24px;
+  border-radius:999px;
+  border:2px solid var(--border);
+  background:var(--paper);
+  color:var(--text);
+  font-family:var(--font-display);
+  font-variation-settings:'wdth' 100,'wght' 700;
+  font-size:24px;
+  text-align:center;
+  letter-spacing:0.06em;
   transition:border-color .15s ease, box-shadow .15s ease;
 }
-.lottery-input:focus{border-color:var(--bar);outline:none}
+.lottery-input:focus{
+  border-color:var(--lime);
+  outline:none;
+  box-shadow:0 0 0 3px rgba(166,237,0,0.25);
+}
 .lottery-btn{
-  width:100%;min-height:56px;padding:14px 24px;font-size:16px;
-  white-space:nowrap;border-radius:999px;
+  width:100%;
+  min-height:64px;
+  padding:16px 32px;
+  font-size:17px;
+  white-space:nowrap;
+  border-radius:999px;
 }
-.lottery-status{min-height:24px;margin-top:2px}
-.thank-you-actions{
-  display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px;width:100%;
-}
-.thank-you-countdown{
-  font-size:14px;color:var(--muted);font-weight:600;min-height:20px;
-}
+.lottery-status{min-height:28px;margin-top:2px}
 
 /* Result Screen */
 .result-head{
@@ -1396,40 +1395,41 @@ function renderResult(){
   var name = state.contact.name.trim();
   var lead = state.lastLead || (getLeads()[0] || null);
   var currentLottery = lead && lead.lottery ? lead.lottery : (state.contact.lottery || "");
+  var total = visibleQuestions().length;
+
+  var allFilled = "";
+  for(var i=0; i<total; i++) allFilled += '<span class="on"></span>';
 
   app.innerHTML =
-    '<section class="screen thank-you-screen">' +
-      '<div class="thank-you-card">' +
-        '<div class="thank-you-icon" aria-hidden="true">' +
-          '<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
-            '<polyline points="20 6 9 17 4 12"></polyline>' +
-          '</svg>' +
+    '<section class="screen">' +
+      '<div class="progress" aria-label="Финальный шаг: Заявка принята">' +
+        '<span class="progress-label">Заявка принята</span>' +
+        '<span class="progress-track" aria-hidden="true">' + allFilled + '</span>' +
+        '<span class="badge-ekom" style="margin-left:auto;">✓ Готово</span>' +
+      '</div>' +
+      '<h2 class="qtitle sr-heading" tabindex="-1" data-focus>Спасибо, заявка отправлена!</h2>' +
+      '<p class="qhint">' +
+        (name ? esc(name) + ', мы ' : 'Мы ') + 'получили ваши ответы. Команда Альфа-Селлер свяжется с вами и подготовит персональное решение.' +
+      '</p>' +
+      '<div class="lottery-box">' +
+        '<span class="lottery-badge">Офлайн-розыгрыш</span>' +
+        '<h3 class="lottery-title">Номер лотерейного билета</h3>' +
+        '<div class="lottery-form">' +
+          '<input type="text" id="lotteryInput" class="lottery-input" inputmode="numeric" placeholder="Например: 742" value="' + esc(currentLottery) + '" autocomplete="off">' +
+          '<button type="button" class="btn btn-lime lottery-btn" id="saveLotteryBtn">' +
+            (currentLottery ? '✓ Номер привязан' : 'Привязать к анкете') +
+          '</button>' +
         '</div>' +
-        '<span class="thank-you-tag">Заявка принята</span>' +
-        '<h2 class="thank-you-title sr-heading" tabindex="-1" data-focus>Спасибо, заявка отправлена!</h2>' +
-        '<p class="thank-you-lead">' +
-          (name ? esc(name) + ', мы ' : 'Мы ') + 'получили ваши ответы. Команда Альфа-Селлер свяжется с вами и подготовит персональное решение.' +
-        '</p>' +
-        '<div class="lottery-box">' +
-          '<span class="lottery-badge">Офлайн-розыгрыш</span>' +
-          '<h3 class="lottery-title">Номер лотерейного билета</h3>' +
-          '<div class="lottery-form">' +
-            '<input type="text" id="lotteryInput" class="lottery-input" inputmode="numeric" placeholder="Например: 742" value="' + esc(currentLottery) + '" autocomplete="off">' +
-            '<button type="button" class="btn btn-lime lottery-btn" id="saveLotteryBtn">' +
-              (currentLottery ? '✓ Номер привязан' : 'Привязать к анкете') +
-            '</button>' +
-          '</div>' +
-          '<div id="lotteryStatus" class="lottery-status">' +
-            (currentLottery ? '<span class="status-pill ok">✓ Номер ' + esc(currentLottery) + ' привязан к вашей заявке в таблице!</span>' : '') +
-          '</div>' +
+        '<div id="lotteryStatus" class="lottery-status">' +
+          (currentLottery ? '<span class="status-pill ok">✓ Номер ' + esc(currentLottery) + ' привязан к вашей заявке в таблице!</span>' : '') +
         '</div>' +
-        '<div id="saveMeta" style="margin-top:2px">' +
+      '</div>' +
+      '<div class="nav" style="margin-top:auto;">' +
+        '<div id="saveMeta">' +
           (state.saveStatus === "sent" ? '<span class="status-pill ok">✓ Данные успешно отправлены</span>' :
            state.saveStatus ? '<span class="status-pill offline">💾 Сохранено на устройстве</span>' : '') +
         '</div>' +
-        '<div class="thank-you-actions">' +
-          '<button type="button" class="btn btn-lime" id="againBtn">Заполнить заново</button>' +
-        '</div>' +
+        '<button type="button" class="btn btn-lime" id="againBtn">Заполнить заново</button>' +
       '</div>' +
     '</section>';
 
