@@ -1,5 +1,5 @@
 /**
- * GOOGLE APPS SCRIPT ДЛЯ СБОРА ЛИДОВ С КВИЗА АЛЬФА-СЕЛЛЕР
+ * GOOGLE APPS SCRIPT ДЛЯ СБОРА ЛИДОВ И ПРИВЯЗКИ ЛОТЕРЕИ АЛЬФА-СЕЛЛЕР
  * 
  * Инструкция по обновлению скрипта в вашей Google Таблице:
  * 1. Откройте Google Таблицу.
@@ -9,7 +9,10 @@
  * 5. Нажмите: «Развернуть» (Deploy) -> «Управление развертываниями» (Manage deployments) ->
  *    значок карандаша (Редактировать) -> в поле «Версия» выберите «Новая версия» (New version) -> «Развернуть» (Deploy).
  * 
- * Готово! Все поля (включая «Email», «Номер лотереи», новые вопросы) будут автоматически записываться в таблицу.
+ * Теперь:
+ * 1. Лиды создаются со всеми ответами и контактами.
+ * 2. Когда участник вводит номер лотереи на странице «Спасибо», скрипт находит созданную строку
+ *    и моментально записывает номер лотереи прямо в эту же строку к клиенту!
  */
 
 function doPost(e) {
@@ -66,45 +69,40 @@ function doPost(e) {
 
     var t = data.answersText || {};
     var msgr = data.messenger || data.telegram || data.maxLogin || "";
-    var lottery = data.lottery || data.lotteryNumber || "";
+    var lottery = String(data.lottery || data.lotteryNumber || "").trim();
 
     // Читаем текущие заголовки таблицы
     var currentHeaders = sheet.getRange(1, 1, 1, Math.max(lastCol, 1)).getValues()[0];
     
-    // Проверяем наличие колонки Email
+    // Проверяем наличие колонок Email и Номер лотереи
     var emailColIdx = -1;
     var lotteryColIdx = -1;
+    var idColIdx = -1;
+    var phoneColIdx = -1;
+
     for (var i = 0; i < currentHeaders.length; i++) {
       var h = String(currentHeaders[i]).toLowerCase();
-      if (h.indexOf("email") !== -1 || h.indexOf("почта") !== -1) {
-        emailColIdx = i;
-      }
-      if (h.indexOf("лотере") !== -1 || h.indexOf("билет") !== -1 || h.indexOf("купон") !== -1) {
-        lotteryColIdx = i;
-      }
+      if (h.indexOf("id") !== -1 && idColIdx === -1) idColIdx = i + 1;
+      if ((h.indexOf("телефон") !== -1 || h.indexOf("phone") !== -1) && phoneColIdx === -1) phoneColIdx = i + 1;
+      if ((h.indexOf("email") !== -1 || h.indexOf("почта") !== -1) && emailColIdx === -1) emailColIdx = i + 1;
+      if ((h.indexOf("лотере") !== -1 || h.indexOf("билет") !== -1 || h.indexOf("купон") !== -1) && lotteryColIdx === -1) lotteryColIdx = i + 1;
     }
 
     // Если в таблице ещё нет колонки Email, аккуратно вставляем её после колонки «Телефон»
     if (emailColIdx === -1 && lastRow > 0) {
-      var phoneColIdx = -1;
-      for (var p = 0; p < currentHeaders.length; p++) {
-        var ph = String(currentHeaders[p]).toLowerCase();
-        if (ph.indexOf("телефон") !== -1 || ph.indexOf("phone") !== -1) {
-          phoneColIdx = p + 1; // 1-based index
-          break;
-        }
-      }
-      if (phoneColIdx > 0) {
-        sheet.insertColumnAfter(phoneColIdx);
-        sheet.getRange(1, phoneColIdx + 1).setValue("Email").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
-      } else {
-        sheet.getRange(1, currentHeaders.length + 1).setValue("Email").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
-      }
+      var pCol = phoneColIdx > 0 ? phoneColIdx : 4;
+      sheet.insertColumnAfter(pCol);
+      sheet.getRange(1, pCol + 1).setValue("Email").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
       lastCol = sheet.getLastColumn();
       currentHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+      // Переопределяем индексы
+      for (var i2 = 0; i2 < currentHeaders.length; i2++) {
+        var h2 = String(currentHeaders[i2]).toLowerCase();
+        if ((h2.indexOf("лотере") !== -1 || h2.indexOf("билет") !== -1 || h2.indexOf("купон") !== -1) && lotteryColIdx === -1) lotteryColIdx = i2 + 1;
+      }
     }
 
-    // Если в таблице ещё нет колонки «Номер лотереи», добавляем её после «Компания / Бренд»
+    // Если в таблице ещё нет колонки «Номер лотереи», добавляем её
     if (lotteryColIdx === -1 && lastRow > 0) {
       var compColIdx = -1;
       for (var k = 0; k < currentHeaders.length; k++) {
@@ -114,17 +112,55 @@ function doPost(e) {
           break;
         }
       }
-      if (compColIdx > 0) {
-        sheet.insertColumnAfter(compColIdx);
-        sheet.getRange(1, compColIdx + 1).setValue("Номер лотереи").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
-      } else {
-        sheet.getRange(1, currentHeaders.length + 1).setValue("Номер лотереи").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
-      }
+      var insertAfter = compColIdx > 0 ? compColIdx : Math.min(7, currentHeaders.length);
+      sheet.insertColumnAfter(insertAfter);
+      lotteryColIdx = insertAfter + 1;
+      sheet.getRange(1, lotteryColIdx).setValue("Номер лотереи").setBackground("#121212").setFontColor("#FFFFFF").setFontWeight("bold");
       lastCol = sheet.getLastColumn();
       currentHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
     }
 
-    // Формируем значения строки строго по заголовкам колонок
+    // ========================================================
+    // РЕЖИМ 1: ПРИВЯЗКА / ОБНОВЛЕНИЕ НОМЕРА ЛОТЕРЕИ К СУЩЕСТВУЮЩЕМУ ЛИДУ
+    // ========================================================
+    if (data.action === "updateLottery" || (lottery && lastRow > 1 && !data.channels && !data.mainProduct)) {
+      var targetRow = -1;
+      var searchId = String(data.id || "").trim();
+      var cleanPhone = String(data.phone || "").replace(/\D/g, "");
+
+      var numRows = lastRow - 1;
+      if (numRows > 0) {
+        var idValues = idColIdx > 0 ? sheet.getRange(2, idColIdx, numRows, 1).getValues() : [];
+        var phValues = phoneColIdx > 0 ? sheet.getRange(2, phoneColIdx, numRows, 1).getValues() : [];
+
+        // Ищем строку снизу вверх (недавний созданный лид находится в самом конце таблицы)
+        for (var r = numRows - 1; r >= 0; r--) {
+          var rowId = idValues[r] ? String(idValues[r][0]).trim() : "";
+          var rowPh = phValues[r] ? String(phValues[r][0]).replace(/\D/g, "") : "";
+          
+          if ((searchId && rowId === searchId) || (cleanPhone && cleanPhone.length >= 10 && rowPh.indexOf(cleanPhone.slice(-10)) !== -1)) {
+            targetRow = r + 2; // 1-based, с учётом строки заголовка
+            break;
+          }
+        }
+      }
+
+      if (targetRow > 0) {
+        if (lotteryColIdx > 0) {
+          var cell = sheet.getRange(targetRow, lotteryColIdx);
+          cell.setValue(lottery);
+          cell.setFontWeight("bold");
+          cell.setBackground("#F4FFCC"); // Акцентный мягкий лайм
+        }
+        lock.releaseLock();
+        return ContentService.createTextOutput(JSON.stringify({ status: "success", updated: true, row: targetRow, lottery: lottery }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    // ========================================================
+    // РЕЖИМ 2: СОЗДАНИЕ НОВОГО ЛИДА
+    // ========================================================
     var row = [];
     for (var c = 0; c < currentHeaders.length; c++) {
       var col = String(currentHeaders[c]).trim().toLowerCase();

@@ -330,16 +330,44 @@ button,input,select,textarea{font:inherit;color:inherit}
   margin:0;font-size:clamp(16.5px,2vw,18.5px);line-height:1.45;color:var(--muted);
   font-family:var(--font-body);font-variation-settings:'wdth' 87,'wght' 400;max-width:44ch;
 }
-.thank-you-info{
-  background:var(--panel);border-radius:20px;padding:18px 22px;width:100%;
-  display:flex;flex-direction:column;gap:12px;text-align:left;
-  font-size:15.5px;line-height:1.4;color:var(--text);
-  font-family:var(--font-body);font-variation-settings:'wdth' 87,'wght' 500;
+.lottery-box{
+  background:var(--panel);border:2px solid rgba(166,237,0,0.5);border-radius:24px;
+  padding:clamp(20px,3.5vw,28px) clamp(16px,3vw,26px);width:100%;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.03);
 }
-.thank-you-info .info-row{display:flex;align-items:flex-start;gap:12px}
-.thank-you-info .info-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--lime);flex:none;margin-top:6px;
+.lottery-badge{
+  background:var(--lime);color:var(--on-lime);font-family:var(--font-display);
+  font-variation-settings:'wdth' 100,'wght' 800;font-size:11.5px;letter-spacing:0.04em;
+  padding:4px 14px;border-radius:999px;text-transform:uppercase;
 }
+.lottery-title{
+  margin:0;font-family:var(--font-display);font-size:clamp(19px,2.6vw,25px);
+  line-height:1.2;font-weight:800;letter-spacing:-0.02em;color:var(--text);
+  font-variation-settings:'wdth' 100,'wght' 800;
+}
+.lottery-desc{
+  margin:0;font-size:15px;line-height:1.45;color:var(--muted);
+  font-family:var(--font-body);font-variation-settings:'wdth' 87,'wght' 400;max-width:46ch;
+}
+.lottery-form{
+  display:flex;gap:10px;width:100%;max-width:440px;margin-top:4px;
+}
+@media (max-width:540px){
+  .lottery-form{flex-direction:column}
+}
+.lottery-input{
+  flex:1;min-height:54px;padding:12px 18px;border-radius:999px;
+  border:2px solid var(--border);background:var(--paper);color:var(--text);
+  font-family:var(--font-display);font-variation-settings:'wdth' 100,'wght' 700;
+  font-size:20px;text-align:center;letter-spacing:0.04em;
+  transition:border-color .15s ease;
+}
+.lottery-input:focus{border-color:var(--bar);outline:none}
+.lottery-btn{
+  min-height:54px;padding:12px 24px;font-size:15px;white-space:nowrap;flex:none;
+}
+.lottery-status{min-height:24px;margin-top:2px}
 .thank-you-actions{
   display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px;width:100%;
 }
@@ -926,6 +954,16 @@ function addLead(doc){
   list.unshift(doc);
   saveLeads(list);
 }
+function updateLead(doc){
+  var list = getLeads();
+  for(var i=0; i<list.length; i++){
+    if(list[i].id === doc.id){
+      list[i] = doc;
+      break;
+    }
+  }
+  saveLeads(list);
+}
 function updateLeadSync(id, status){
   var list = getLeads();
   for(var i=0; i<list.length; i++){
@@ -1182,7 +1220,6 @@ function renderContacts(){
         field("email", "Электронная почта", " (необязательно)", c.email || "", "email", "email", e.email, "name@company.ru") +
         field("messenger", "Telegram или МАКС", " (логин/ник)", c.messenger || c.telegram || c.maxLogin || "", "text", "off", null, "@username или ник в МАКС") +
         field("company", "Название компании / бренда", " (необязательно)", c.company, "text", "organization", null, "ООО или бренд") +
-        field("lottery", "Номер лотереи", " (необязательно)", c.lottery || "", "text", "off", null, "Номер вашего билета или купона") +
         '<label class="consent">' +
           '<input type="checkbox" id="consent"' + (c.consent ? " checked" : "") + '>' +
           '<span>Согласен на обработку персональных данных для связи со мной по подобранным продуктам платформы Альфа-Селлер' +
@@ -1195,7 +1232,7 @@ function renderContacts(){
       '</div>' +
     '</section>';
 
-  ["name","email","messenger","company","lottery"].forEach(function(k){
+  ["name","email","messenger","company"].forEach(function(k){
     var el = document.getElementById("f-" + k);
     if(el) el.oninput = function(){ state.contact[k] = el.value; };
   });
@@ -1331,6 +1368,7 @@ function submit(){
   };
 
   addLead(doc);
+  state.lastLead = doc;
   state.result = recs;
   state.saveStatus = "saving";
   go("result");
@@ -1357,6 +1395,8 @@ function whyList(reasons){
 
 function renderResult(){
   var name = state.contact.name.trim();
+  var lead = state.lastLead || (getLeads()[0] || null);
+  var currentLottery = lead && lead.lottery ? lead.lottery : (state.contact.lottery || "");
 
   app.innerHTML =
     '<section class="screen thank-you-screen">' +
@@ -1371,23 +1411,26 @@ function renderResult(){
         '<p class="thank-you-lead">' +
           (name ? esc(name) + ', мы ' : 'Мы ') + 'получили ваши ответы. Команда Альфа-Селлер свяжется с вами и подготовит персональное решение.' +
         '</p>' +
-        '<div class="thank-you-info">' +
-          '<div class="info-row">' +
-            '<span class="info-dot"></span>' +
-            '<span>Менеджер свяжется с вами по указанным контактам для консультации и расчёта условий</span>' +
+        '<div class="lottery-box">' +
+          '<span class="lottery-badge">Офлайн-розыгрыш</span>' +
+          '<h3 class="lottery-title">Номер лотерейного билета</h3>' +
+          '<p class="lottery-desc">Получили купон или браслет на мероприятии? Введите номер, чтобы привязать его к вашей заявке:</p>' +
+          '<div class="lottery-form">' +
+            '<input type="text" id="lotteryInput" class="lottery-input" inputmode="numeric" placeholder="Например: 742" value="' + esc(currentLottery) + '" autocomplete="off">' +
+            '<button type="button" class="btn btn-lime lottery-btn" id="saveLotteryBtn">' +
+              (currentLottery ? '✓ Номер привязан' : 'Привязать к анкете') +
+            '</button>' +
           '</div>' +
-          '<div class="info-row">' +
-            '<span class="info-dot"></span>' +
-            '<span>Если вы находитесь на мероприятии — вы можете прямо сейчас подойти к экспертам Альфа-Селлер на стенде</span>' +
+          '<div id="lotteryStatus" class="lottery-status">' +
+            (currentLottery ? '<span class="status-pill ok">✓ Номер ' + esc(currentLottery) + ' привязан к вашей заявке в таблице!</span>' : '') +
           '</div>' +
         '</div>' +
-        '<div id="saveMeta" style="margin-top:4px">' +
+        '<div id="saveMeta" style="margin-top:2px">' +
           (state.saveStatus === "sent" ? '<span class="status-pill ok">✓ Данные успешно отправлены</span>' :
            state.saveStatus ? '<span class="status-pill offline">💾 Сохранено на устройстве</span>' : '') +
         '</div>' +
         '<div class="thank-you-actions">' +
           '<button type="button" class="btn btn-lime" id="againBtn">Заполнить заново</button>' +
-          '<span class="thank-you-countdown" id="countdown"></span>' +
         '</div>' +
       '</div>' +
     '</section>';
@@ -1397,7 +1440,63 @@ function renderResult(){
     render();
   };
 
-  // Без таймера сброса: экран остаётся открытым до ручного нажатия пользователем
+  // Привязка номера лотереи к заявке в Google Таблице
+  var lBtn = document.getElementById("saveLotteryBtn");
+  var lInput = document.getElementById("lotteryInput");
+  var lStatus = document.getElementById("lotteryStatus");
+
+  function saveLottery(){
+    var val = lInput.value.trim();
+    if(!val){
+      lStatus.innerHTML = '<span class="status-pill offline">Пожалуйста, введите номер билета</span>';
+      lInput.focus();
+      return;
+    }
+    lBtn.disabled = true;
+    lBtn.textContent = "Сохранение...";
+    lStatus.innerHTML = '<span class="status-pill" style="background:var(--panel);color:var(--muted)">Отправка в таблицу...</span>';
+
+    var curLead = state.lastLead || (getLeads()[0] || null);
+    if(curLead){
+      curLead.lottery = val;
+      curLead.lotteryNumber = val;
+      updateLead(curLead);
+    }
+    state.contact.lottery = val;
+
+    var settings = getSettings();
+    var payload = {
+      action: "updateLottery",
+      id: curLead ? curLead.id : "",
+      phone: curLead ? curLead.phone : (state.contact.phone || ""),
+      name: curLead ? curLead.name : (state.contact.name || ""),
+      lottery: val,
+      lotteryNumber: val
+    };
+
+    var p = settings.googleScriptUrl ? sendToWebhook(settings.googleScriptUrl, payload) : Promise.resolve(true);
+
+    p.then(function(){
+      lBtn.disabled = false;
+      lBtn.textContent = "✓ Сохранено";
+      lStatus.innerHTML = '<span class="status-pill ok">✓ Номер ' + esc(val) + ' успешно привязан к вашей анкете в таблице!</span>';
+    }).catch(function(){
+      lBtn.disabled = false;
+      lBtn.textContent = "Повторить";
+      lStatus.innerHTML = '<span class="status-pill offline">💾 Сохранено на устройстве (офлайн)</span>';
+    });
+  }
+
+  if(lBtn) lBtn.onclick = saveLottery;
+  if(lInput){
+    lInput.onkeydown = function(e){
+      if(e.key === "Enter"){
+        e.preventDefault();
+        saveLottery();
+      }
+    };
+  }
+
   clearInterval(countdownTimer);
 }
 
