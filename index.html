@@ -1069,7 +1069,6 @@ function render(){
   var h = app.querySelector("[data-focus]");
   if(h) h.focus({preventScroll:true});
   window.scrollTo(0,0);
-  armIdle();
 }
 
 /* Screen 1: Start */
@@ -1323,13 +1322,13 @@ function submit(){
     createdAt: now.getTime(),
     createdDate: now.toLocaleString("ru-RU", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}),
     timestamp: now.toLocaleString("ru-RU", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}),
-    name: c.name.trim(),
+    name: (c.name || "").trim(),
     phone: fmtPhone(c.phone),
     email: (c.email || "").trim(),
     messenger: msgr,
     telegram: msgr,
     maxLogin: msgr,
-    company: c.company.trim(),
+    company: (c.company || "").trim(),
     lottery: (c.lottery || "").trim(),
     lotteryNumber: (c.lottery || "").trim(),
     consent: true,
@@ -1369,8 +1368,8 @@ function submit(){
   state.lastLead = doc;
   state.result = recs;
   state.saveStatus = "saving";
-  go("result");
 
+  // Отправляем лид со всеми ответами в фоновом режиме
   dispatchLead(doc).then(function(res){
     state.saveStatus = res;
     var metaEl = document.getElementById("saveMeta");
@@ -1382,6 +1381,8 @@ function submit(){
       }
     }
   });
+
+  go("result");
 }
 
 /* Screen 4: Results */
@@ -1463,14 +1464,16 @@ function renderResult(){
     state.contact.lottery = val;
 
     var settings = getSettings();
-    var payload = {
+    // Привязываем номер лотереи и передаём полную копию лида со всеми ответами,
+    // чтобы даже при отсутствии исходной строки в таблице все данные сохранились полностью
+    var payload = Object.assign({}, curLead || {}, {
       action: "updateLottery",
       id: curLead ? curLead.id : "",
       phone: curLead ? curLead.phone : (state.contact.phone || ""),
       name: curLead ? curLead.name : (state.contact.name || ""),
       lottery: val,
       lotteryNumber: val
-    };
+    });
 
     var p = settings.googleScriptUrl ? sendToWebhook(settings.googleScriptUrl, payload) : Promise.resolve(true);
 
@@ -1772,6 +1775,7 @@ if(setBtn) setBtn.onclick = function(){
    9. KIOSK IDLE TIMEOUT — ОТКЛЮЧЁН (сброс по бездействию запрещён)
    ======================================================== */
 // Таймер бездействия полностью отключён: форма не сбрасывается ни при каких паузах
+function armIdle(){}
 
 
 
