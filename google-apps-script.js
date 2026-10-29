@@ -171,7 +171,12 @@ function doPost(e) {
       } else if (col.indexOf("имя") !== -1 || col.indexOf("name") !== -1) {
         row.push(data.name || "");
       } else if (col.indexOf("телефон") !== -1 || col.indexOf("phone") !== -1) {
-        row.push(data.phone || "");
+        var pVal = String(data.phone || "").trim();
+        // Экранируем знак +, чтобы Google Таблицы не пытались вычислять телефон как формулу
+        if (pVal && pVal.charAt(0) === "+") {
+          pVal = "'" + pVal;
+        }
+        row.push(pVal);
       } else if (col.indexOf("email") !== -1 || col.indexOf("почта") !== -1) {
         row.push(data.email || "");
       } else if (col.indexOf("telegram") !== -1 || col.indexOf("макс") !== -1 || col.indexOf("мессенджер") !== -1) {
@@ -212,6 +217,10 @@ function doPost(e) {
     }
 
     sheet.appendRow(row);
+    // Принудительно устанавливаем формат "Обычный текст" для колонки телефона, чтобы исключить #ERROR!
+    if (phoneColIdx > 0) {
+      sheet.getRange(sheet.getLastRow(), phoneColIdx).setNumberFormat("@");
+    }
 
     // Подсветка строки по температуре лида
     var newRow = sheet.getLastRow();
