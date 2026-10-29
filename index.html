@@ -351,21 +351,20 @@ button,input,select,textarea{font:inherit;color:inherit}
   font-family:var(--font-body);font-variation-settings:'wdth' 87,'wght' 400;max-width:46ch;
 }
 .lottery-form{
-  display:flex;gap:10px;width:100%;max-width:440px;margin-top:4px;
-}
-@media (max-width:540px){
-  .lottery-form{flex-direction:column}
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  width:100%;max-width:380px;margin-top:6px;
 }
 .lottery-input{
-  flex:1;min-height:54px;padding:12px 18px;border-radius:999px;
+  width:100%;min-height:56px;padding:12px 20px;border-radius:999px;
   border:2px solid var(--border);background:var(--paper);color:var(--text);
   font-family:var(--font-display);font-variation-settings:'wdth' 100,'wght' 700;
-  font-size:20px;text-align:center;letter-spacing:0.04em;
-  transition:border-color .15s ease;
+  font-size:22px;text-align:center;letter-spacing:0.05em;
+  transition:border-color .15s ease, box-shadow .15s ease;
 }
 .lottery-input:focus{border-color:var(--bar);outline:none}
 .lottery-btn{
-  min-height:54px;padding:12px 24px;font-size:15px;white-space:nowrap;flex:none;
+  width:100%;min-height:56px;padding:14px 24px;font-size:16px;
+  white-space:nowrap;border-radius:999px;
 }
 .lottery-status{min-height:24px;margin-top:2px}
 .thank-you-actions{
@@ -1414,7 +1413,6 @@ function renderResult(){
         '<div class="lottery-box">' +
           '<span class="lottery-badge">Офлайн-розыгрыш</span>' +
           '<h3 class="lottery-title">Номер лотерейного билета</h3>' +
-          '<p class="lottery-desc">Получили купон или браслет на мероприятии? Введите номер, чтобы привязать его к вашей заявке:</p>' +
           '<div class="lottery-form">' +
             '<input type="text" id="lotteryInput" class="lottery-input" inputmode="numeric" placeholder="Например: 742" value="' + esc(currentLottery) + '" autocomplete="off">' +
             '<button type="button" class="btn btn-lime lottery-btn" id="saveLotteryBtn">' +
