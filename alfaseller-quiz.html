@@ -512,6 +512,19 @@ td .small{color:var(--muted);font-size:13.5px;margin-top:2px}
   box-shadow:0 10px 30px rgba(0,0,0,0.2);animation:enter .2s ease-out;
 }
 </style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113888736', 'ym');
+
+    ym(113888736, 'init', {ssr:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/113888736" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 </head>
 <body>
 <div class="shell">
@@ -758,6 +771,14 @@ function saveSettings(s){
 /* ========================================================
    3. HELPERS
    ======================================================== */
+var METRIKA_ID = 113888736;
+function reachGoal(target, params){
+  try {
+    if(typeof ym === "function"){
+      ym(METRIKA_ID, "reachGoal", target, params);
+    }
+  } catch(e){}
+}
 function has(arr, v){ return Array.isArray(arr) && arr.indexOf(v) !== -1; }
 function onlyNone(a){ return Array.isArray(a.channels) && a.channels.length === 1 && a.channels[0] === "none"; }
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
@@ -1102,6 +1123,7 @@ function renderStart(){
       '</div>' +
     '</section>';
   document.getElementById("startBtn").onclick = function(){
+    reachGoal("quiz_start");
     state = fresh();
     state.screen = "q";
     render();
@@ -1110,6 +1132,7 @@ function renderStart(){
 
 /* Screen 2: Questions */
 function renderQuestion(){
+  reachGoal("quiz_step_" + (state.qi + 1));
   var list = visibleQuestions();
   if(state.qi >= list.length){ go("contacts"); return; }
   var q = list[state.qi];
@@ -1200,6 +1223,7 @@ function next(){
 
 /* Screen 3: Contacts */
 function renderContacts(){
+  reachGoal("contacts_view");
   var c = state.contact, e = state.errors;
   app.innerHTML =
     '<section class="screen">' +
@@ -1368,6 +1392,7 @@ function submit(){
   state.lastLead = doc;
   state.result = recs;
   state.saveStatus = "saving";
+  reachGoal("lead_submit", { temperature: temp, mainProduct: PRODUCTS[recs[0].id].name });
 
   // Отправляем лид со всеми ответами в фоновом режиме
   dispatchLead(doc).then(function(res){
@@ -1478,6 +1503,7 @@ function renderResult(){
     var p = settings.googleScriptUrl ? sendToWebhook(settings.googleScriptUrl, payload) : Promise.resolve(true);
 
     p.then(function(){
+      reachGoal("lottery_attached", { number: val });
       lBtn.disabled = false;
       lBtn.textContent = "✓ Сохранено";
       lStatus.innerHTML = '<span class="status-pill ok">✓ Номер ' + esc(val) + ' успешно привязан к вашей анкете в таблице!</span>';
